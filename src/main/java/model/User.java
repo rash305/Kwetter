@@ -34,7 +34,7 @@ public  class User {
     //region Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String userName;
     private String email;
     private String encryptedPassword;
@@ -60,7 +60,7 @@ public  class User {
 
     //region Properties
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -113,7 +113,7 @@ public  class User {
     //region Setters
 
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
