@@ -1,12 +1,14 @@
 package model;
 
 import javax.annotation.security.DeclareRoles;
+import javax.enterprise.inject.Model;
 import javax.persistence.*;
 import java.util.Set;
 
 /**
  * Created by Sjoerd on 26-2-2018.
  */
+@Model
 @Entity
 @Table(name = "user_role")
 public class USER_ROLE {
@@ -32,6 +34,9 @@ public class USER_ROLE {
     }
 
 
+    public USER_ROLE(){
+
+    }
 
     public USER_ROLE(String name) {
         this.name = name;
