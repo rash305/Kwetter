@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Sjoerd on 7-3-2018.
  */
-public class UserTest {
+public class UserCollectionRepositoryTest {
 
     private User user;
     private User user1;
@@ -125,7 +125,6 @@ public class UserTest {
 
         assertTrue(userRepository.removeUser(repoUser));
         assertFalse(userRepository.removeUser(repoUser));
-
     }
 
 

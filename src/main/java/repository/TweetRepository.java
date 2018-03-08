@@ -11,7 +11,9 @@ import java.util.List;
 public interface TweetRepository {
     Tweet createTweet(Tweet tweet);
 
-    Tweet updatetweet(Tweet tweet);
+    Tweet getTweet(int id);
+
+    Tweet updateTweet(Tweet tweet);
 
     boolean removeTweet(Tweet tweet);
 
