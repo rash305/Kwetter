@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserRepository {
     User getUser(int id);
 
+    List<User> findUserByName(String username);
+
     Collection<User> getFollowers(User user);
 
     Collection<User> getFollowing(User user);

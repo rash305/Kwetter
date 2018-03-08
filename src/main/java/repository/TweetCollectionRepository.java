@@ -40,6 +40,10 @@ public class TweetCollectionRepository implements TweetRepository {
         return null;
     }
 
+    public List<Tweet> getAllTweets(int begin, int max) {
+        return tweets.subList(begin, max);
+    }
+
 
     public Tweet updateTweet(Tweet tweet) {
         for (Tweet t : tweets) {
@@ -55,6 +59,7 @@ public class TweetCollectionRepository implements TweetRepository {
         return tweets.remove(tweet);
     }
 
+
     public List<Tweet> getTweetsOfUser(User user, int begin, int max) {
 
         List<Tweet> returnTweets = new ArrayList<Tweet>();
@@ -63,7 +68,7 @@ public class TweetCollectionRepository implements TweetRepository {
                 returnTweets.add(t);
             }
         }
-        return returnTweets;
+        return tweets.subList(begin, max);
     }
 
     public List<Tweet> getTweetsFollowing(User myAccount, int begin, int max) {
@@ -75,6 +80,6 @@ public class TweetCollectionRepository implements TweetRepository {
                 }
             }
         }
-        return tweets;
+        return tweets.subList(begin, max);
     }
 }

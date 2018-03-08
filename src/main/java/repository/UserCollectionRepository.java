@@ -23,6 +23,16 @@ public class UserCollectionRepository implements UserRepository {
         return userid++;
     }
 
+    public List<User> findUserByName(String name){
+        List<User> foundUsers = new ArrayList<User>();
+        for (User u:users) {
+            if(u.getUserName().startsWith(name)){
+                foundUsers.add(u);
+            }
+        }
+        return foundUsers;
+    }
+
     public User getUser(int id) {
         for (User u:users) {
             if(u.getId() == id){

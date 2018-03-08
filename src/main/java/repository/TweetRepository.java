@@ -13,6 +13,8 @@ public interface TweetRepository {
 
     Tweet getTweet(int id);
 
+    List<Tweet> getAllTweets(int begin, int max);
+
     Tweet updateTweet(Tweet tweet);
 
     boolean removeTweet(Tweet tweet);
