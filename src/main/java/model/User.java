@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.swing.plaf.synth.Region;
 import java.util.*;
 
+import static javax.persistence.CascadeType.ALL;
+
 /**
  * Created by Sjoerd on 26-2-2018.
  */
@@ -43,13 +45,12 @@ public  class User {
     private String avatarPath;
     private String website;
     @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<USER_ROLE> roles;
 
-    @OneToMany(fetch = FetchType.LAZY)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweetedBy", cascade = ALL)
     private Collection<Tweet> tweets = new HashSet<Tweet>();
     @OneToMany(fetch = FetchType.LAZY)
-    @ManyToMany()
     private Collection<User> following = new HashSet<User>();
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable()

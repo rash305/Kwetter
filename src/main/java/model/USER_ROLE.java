@@ -10,7 +10,7 @@ import java.util.Set;
  */
 @Model
 @Entity
-@Table(name = "user_role")
+@Table
 public class USER_ROLE {
     private int id;
     private String name;

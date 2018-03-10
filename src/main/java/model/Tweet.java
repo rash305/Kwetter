@@ -1,8 +1,5 @@
 package model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import javax.enterprise.inject.Model;
 import javax.persistence.*;
 import java.sql.Timestamp;

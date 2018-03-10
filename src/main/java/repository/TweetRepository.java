@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by Sjoerd on 8-3-2018.
  */
+
 public interface TweetRepository {
     Tweet createTweet(Tweet tweet);
 

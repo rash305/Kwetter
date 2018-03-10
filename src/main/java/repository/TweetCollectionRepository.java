@@ -3,12 +3,16 @@ package repository;
 import model.Tweet;
 import model.User;
 
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Sjoerd on 8-3-2018.
  */
+@JPA
+@Stateless
 public class TweetCollectionRepository implements TweetRepository {
 
     private List<Tweet> tweets;

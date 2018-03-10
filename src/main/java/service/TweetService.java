@@ -1,8 +1,8 @@
 package service;
 
-import com.sun.org.apache.regexp.internal.RE;
 import model.Tweet;
 import model.User;
+import repository.JPA;
 import repository.TweetRepository;
 
 import javax.ejb.Stateless;
@@ -16,7 +16,7 @@ import java.util.List;
 @Stateless
 public class TweetService {
 
-    @Inject
+    @Inject @JPA
     TweetRepository tweetRepository;
 
 

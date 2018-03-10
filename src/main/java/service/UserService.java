@@ -2,6 +2,7 @@ package service;
 
 import model.Tweet;
 import model.User;
+import repository.JPA;
 import repository.UserRepository;
 
 import javax.ejb.Stateless;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Stateless
 public class UserService {
-    @Inject
+    @Inject @JPA
     UserRepository userRepository;
 
 
