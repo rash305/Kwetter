@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * Created by Sjoerd on 8-3-2018.
  */
-@JPA
 @Stateless
 public class TweetCollectionRepository implements TweetRepository {
 

@@ -35,8 +35,8 @@ public class Tweet {
     private int id;
     private String message = null;
 
-    @ManyToOne
-    private List<String> tags = new ArrayList<String>();
+
+    private List<String> tags = null;
     @ManyToOne
     private User tweetedBy = null;
     @OneToMany
@@ -48,7 +48,7 @@ public class Tweet {
     @Basic(optional = false)
     @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp published = null;
+    private Date published = null;
     //endregion
 
 
@@ -78,7 +78,7 @@ public class Tweet {
         return mentions;
     }
 
-    public Timestamp getPublished() {
+    public Date getPublished() {
         return published;
     }
 
