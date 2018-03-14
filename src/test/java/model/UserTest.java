@@ -56,7 +56,7 @@ public class UserTest {
         Assert.assertTrue( user1.getFollowing().contains(user2));
 
         //Unfollow
-        Assert.assertTrue(user1.UnFollow(user2));
+        Assert.assertTrue(user1.unFollow(user2));
 
         //Validate unfollowing
         Assert.assertEquals(user1.getFollowing(), following);
@@ -70,9 +70,9 @@ public class UserTest {
         Assert.assertFalse(followers.contains(user1));
 
         //Follow a user
-        Assert.assertTrue(user.AddFollower(user1));
+        Assert.assertTrue(user.addFollower(user1));
         //Can't follow a user twice
-        Assert.assertFalse(user.AddFollower(user1));
+        Assert.assertFalse(user.addFollower(user1));
         Collection<User> newFollowing = user.getFollowers();
 
         Assert.assertTrue(newFollowing.contains(user1));
@@ -85,13 +85,13 @@ public class UserTest {
         Assert.assertFalse(followers.contains(user2));
 
         //Follow a user
-        Assert.assertTrue(user1.AddFollower(user2));
+        Assert.assertTrue(user1.addFollower(user2));
 
         //Validate Following
         Assert.assertTrue( user1.getFollowers().contains(user2));
 
         //Unfollow
-        Assert.assertTrue(user1.LoseFollower(user2));
+        Assert.assertTrue(user1.loseFollower(user2));
 
         //Validate unfollowing
         Assert.assertEquals(user1.getFollowers(), followers);

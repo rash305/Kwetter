@@ -17,9 +17,23 @@ public  class User {
 
     //region Constructor
 
+    /**
+     *  Empty constructor of the user
+     */
     public User() {
     }
 
+    /**
+     *
+     * @param userName
+     * @param email
+     * @param encryptedPassword
+     * @param location
+     * @param bio
+     * @param avatarPath
+     * @param website
+     * @param roles
+     */
     public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website, Set<USER_ROLE> roles) {
         this.userName = userName;
         this.email = email;
@@ -30,6 +44,28 @@ public  class User {
         this.website = website;
         this.roles = roles;
     }
+
+    /**
+     *
+     * @param userName
+     * @param email
+     * @param encryptedPassword
+     * @param location
+     * @param bio
+     * @param avatarPath
+     * @param website
+     */
+    public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website) {
+        this.userName = userName;
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;
+        this.location = location;
+        this.bio = bio;
+        this.avatarPath = avatarPath;
+        this.website = website;
+        this.roles = new HashSet<>();
+    }
+
 
     //endregion
 
@@ -55,6 +91,8 @@ public  class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable()
     private Collection<User> followers= new HashSet<User>();
+
+
 
     //endregion
 
@@ -172,35 +210,48 @@ public  class User {
         return (followCount != following.size());
     }
 
-    public boolean UnFollow(User user){
+    public boolean unFollow(User user){
         int followCount = following.size();
         following.remove(user);
         return (followCount != following.size());
     }
 
-    public boolean AddFollower(User user){
+    public boolean addFollower(User user){
         int followCount = followers.size();
         followers.add(user);
         return (followCount != followers.size());
     }
 
-    public boolean LoseFollower(User user){
+    public boolean loseFollower(User user){
         int followCount = followers.size();
         followers.remove(user);
         return (followCount != followers.size());
     }
 
-    public boolean AddTweet(Tweet tweet){
+    public boolean addTweet(Tweet tweet){
             int tweetCount = tweets.size();
             tweets.add(tweet);
             return (tweetCount != tweets.size());
 
     }
 
-    public boolean DeleteTweet(Tweet tweet){
+    public boolean deleteTweet(Tweet tweet){
         int tweetCount = tweets.size();
         tweets.remove(tweet);
         return (tweetCount != tweets.size());
+    }
+
+    public boolean addRole(USER_ROLE role){
+            int roleCount = roles.size();
+            roles.add(role);
+            return (roleCount != roles.size());
+
+    }
+
+    public boolean deleteRole(USER_ROLE role){
+        int roleCount = roles.size();
+        roles.remove(role);
+        return (roleCount != roles.size());
     }
     //endregion
 }

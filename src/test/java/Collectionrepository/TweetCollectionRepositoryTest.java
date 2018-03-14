@@ -9,7 +9,6 @@ import repository.TweetCollectionRepository;
 import repository.TweetRepository;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -104,26 +103,26 @@ public class TweetCollectionRepositoryTest {
 
 
         Tweet tweet1 = new Tweet("Eerste Tweet",user);
-        user.AddTweet(tweet1);
+        user.addTweet(tweet1);
         tweetRepository.createTweet(tweet1);
         Tweet tweet2 = new Tweet("Tweede Tweet",user1);
-        user1.AddTweet(tweet2);
+        user1.addTweet(tweet2);
         tweetRepository.createTweet(tweet2);
 
         Tweet tweet3 = new Tweet("Derde Tweet",user);
-        user.AddTweet(tweet3);
+        user.addTweet(tweet3);
         tweetRepository.createTweet(tweet3);
 
         Tweet tweet4 = new Tweet("Vierde Tweet",user1);
-        user1.AddTweet(tweet4);
+        user1.addTweet(tweet4);
         tweetRepository.createTweet(tweet4);
 
         Tweet tweet5 = new Tweet("Vijfde Tweet",user);
-        user.AddTweet(tweet5);
+        user.addTweet(tweet5);
         tweetRepository.createTweet(tweet5);
 
         Tweet tweet6 = new Tweet("Zesde Tweet",user1);
-        user1.AddTweet(tweet6);
+        user1.addTweet(tweet6);
         tweetRepository.createTweet(tweet6);
 
 //        List<Tweet> tweetList = tweetRepository.getTweetsOfUser(user1, 0, 200);

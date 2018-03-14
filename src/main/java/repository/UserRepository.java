@@ -1,5 +1,6 @@
 package repository;
 
+import model.USER_ROLE;
 import model.User;
 
 import java.util.Collection;
@@ -10,6 +11,8 @@ import java.util.List;
  */
 public interface UserRepository {
     User getUser(int id);
+
+    List<User> getUsers(int page);
 
     List<User> findUserByName(String username);
 
@@ -22,5 +25,9 @@ public interface UserRepository {
     User updateUser(User user);
 
     boolean removeUser(User user);
+
+    Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles);
+    USER_ROLE createRole(USER_ROLE role);
+    boolean removeRole(USER_ROLE role);
 
 }

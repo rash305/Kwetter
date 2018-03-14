@@ -1,7 +1,9 @@
 package repository;
 
 
+import model.USER_ROLE;
 import model.User;
+import org.eclipse.persistence.annotations.ReturnInsert;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,8 +20,22 @@ public class UserRepositoryImp implements UserRepository {
 
     @Override
     public User getUser(int id) {
-        return null;
+
+        return em.find(User.class, id);
     }
+
+    @Override
+    public List<User> getUsers(int page) {
+        if (page < 0) {
+            return em.createQuery("Select a from User a order by a.userName", User.class)
+                    .getResultList();
+        }
+        int pagesize = 20;
+        return em.createQuery("Select a from User a order by a.userName", User.class)
+                .setFirstResult(pagesize * page).setMaxResults(page * pagesize + pagesize)
+                .getResultList();
+    }
+
 
     @Override
     public List<User> findUserByName(String username) {
@@ -37,8 +53,10 @@ public class UserRepositoryImp implements UserRepository {
     }
 
     @Override
+    @ReturnInsert
     public User createUser(User user) {
-        return null;
+        em.persist(user);
+        return user;
     }
 
     @Override
@@ -49,5 +67,27 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public boolean removeUser(User user) {
         return false;
+    }
+
+    @Override
+    public Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles) {
+        for (USER_ROLE role : roles) {
+            em.persist(role);
+        }
+        return roles;
+
+    }
+
+    @Override
+    public USER_ROLE createRole(USER_ROLE role) {
+        em.persist(role);
+        return role;
+    }
+
+    @Override
+    public boolean removeRole(USER_ROLE role) {
+        boolean returnValue = em.contains(role);
+        em.remove(role);
+        return returnValue;
     }
 }

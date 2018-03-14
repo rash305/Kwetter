@@ -1,7 +1,5 @@
 package Collectionrepository;
 
-import model.Tweet;
-import model.USER_ROLE;
 import model.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,7 +82,7 @@ public class UserCollectionRepositoryTest {
         Assert.assertFalse(followers.contains(user1));
 
         //Follow a user
-        Assert.assertTrue(user.AddFollower(user1));
+        Assert.assertTrue(user.addFollower(user1));
         //Can't follow a user twice
         Collection<User> newFollowers = user.getFollowers();
 

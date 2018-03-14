@@ -1,12 +1,12 @@
 package service;
 
-import model.Tweet;
 import model.User;
 import repository.JPA;
 import repository.UserRepository;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,7 +22,32 @@ public class UserService {
     //Region Methods.
 
     public User getUser(int id){
-        return userRepository.getUser(id);
+        User returnUser = null;
+        returnUser = userRepository.getUser(id);
+
+        if(returnUser == null){
+            throw new NotFoundException( String.format("User with id %d does not exists", id));
+        }
+        return returnUser;
+    }
+
+    public List<User> getUsers(int page){
+        List<User> returnUser = null;
+        returnUser = userRepository.getUsers(page);
+
+        if(returnUser == null || returnUser.isEmpty()){
+            throw new NotFoundException( String.format("Users can not be found"));
+        }
+        return returnUser;
+    }
+
+    public List<User> getUsers(){
+        List<User> returnUser = null;
+        returnUser = userRepository.getUsers(-1);
+        if(returnUser == null || returnUser.isEmpty()){
+            throw new NotFoundException( String.format("Users can not be found"));
+        }
+        return returnUser;
     }
 
     public List<User> getUserByName(String name){

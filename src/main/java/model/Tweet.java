@@ -23,7 +23,7 @@ public class Tweet {
     public Tweet(String message, User tweetedBy) {
         this.message = message;
         this.tweetedBy = tweetedBy;
-        tweetedBy.AddTweet(this);
+        tweetedBy.addTweet(this);
     }
 
     //endregion
@@ -35,8 +35,9 @@ public class Tweet {
     private int id;
     private String message = null;
 
+    @ElementCollection
+    private List<String> tags = new ArrayList<String>();
 
-    private List<String> tags = null;
     @ManyToOne
     private User tweetedBy = null;
     @OneToMany
