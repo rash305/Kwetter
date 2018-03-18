@@ -1,5 +1,6 @@
 package service;
 
+import model.USER_ROLE;
 import model.User;
 import repository.JPA;
 import repository.UserRepository;
@@ -62,17 +63,83 @@ public class UserService {
         return userRepository.updateUser(user);
     }
 
-    public boolean removeUser(User user){
-        return userRepository.removeUser(user);
+    public boolean removeUser(int id){
+        return userRepository.removeUser(id);
     }
 
-    public Collection<User> getFollowers(User user){
-        return userRepository.getFollowers(user);
+    public Collection<User> getFollowers(int id){
+        User user = userRepository.getUser(id);
+        return user.getFollowers();    }
+
+    public Collection<User> getFollowing(int id){
+        User user = userRepository.getUser(id);
+        return user.getFollowing();
     }
 
-    public Collection<User> getFollowing(User user){
-        return userRepository.getFollowing(user);
+
+    public boolean addFollower(int id, int loggedinId) {
+        User targetUser = userRepository.getUser(id);
+        User loggedInUser = userRepository.getUser(loggedinId);
+        if(loggedInUser == null ){
+            throw new NotFoundException( String.format("Loggedin user can not be found"));
+        }
+        if(targetUser == null ){
+            throw new NotFoundException( String.format("Target user can not be found"));
+        }
+
+        boolean returnValue = targetUser.addFollower(loggedInUser);
+        userRepository.updateUser(targetUser);
+
+        return returnValue;
     }
+
+    public boolean removeFollower(int id, int loggedinId) {
+        User targetUser = userRepository.getUser(id);
+        User loggedInUser = userRepository.getUser(loggedinId);
+        if(loggedInUser == null ){
+            throw new NotFoundException( String.format("Loggedin user can not be found"));
+        }
+        if(targetUser == null ){
+            throw new NotFoundException( String.format("Target user can not be found"));
+        }
+
+        boolean returnValue = targetUser.loseFollower(loggedInUser);
+        userRepository.updateUser(targetUser);
+
+        return returnValue;
+
+    }
+
+    public List<USER_ROLE> getRoles(){
+        return userRepository.getRoles();
+    }
+
+    public boolean approveRole(int userid, USER_ROLE role){
+        User updateUser = userRepository.getUser(userid);
+        if(updateUser == null){
+            throw new NotFoundException( String.format("User can not be found"));
+        }
+        if(updateUser.addRole(role)){
+            userRepository.updateUser(updateUser);
+            return true;
+        }return false;
+    }
+
+    public boolean revokeRole(int userid, int roleid){
+        User updateUser = userRepository.getUser(userid);
+        USER_ROLE role = userRepository.getRole(roleid);
+        if(updateUser == null){
+            throw new NotFoundException( String.format("User can not be found"));
+        }
+        if(role== null){
+            throw new NotFoundException( String.format("Role can not be found"));
+        }
+        if(updateUser.deleteRole(role)){
+            userRepository.updateUser(updateUser);
+            return true;
+        }return false;
+    }
+
     //endregion
 
 }
