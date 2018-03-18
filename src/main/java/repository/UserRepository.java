@@ -24,9 +24,14 @@ public interface UserRepository {
 
     User updateUser(User user);
 
-    boolean removeUser(User user);
+    boolean removeUser(int id);
 
     Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles);
+    USER_ROLE getRole(int id);
+    List<USER_ROLE> getRoles();
+
+    //Not used outside this application (In service layer etc.) Maybe in future.
+    //Roles are only created/verified when starting the application
     USER_ROLE createRole(USER_ROLE role);
     boolean removeRole(USER_ROLE role);
 

@@ -28,9 +28,11 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
-            <version>LATEST</version>
+            <version>2.7.1</version>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>

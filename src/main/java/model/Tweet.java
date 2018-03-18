@@ -2,6 +2,7 @@ package model;
 
 import javax.enterprise.inject.Model;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -12,7 +13,7 @@ import java.util.*;
 @Entity
 //Index published data because most of the queries will use a sort based on date
 @Table(indexes = {@Index(name = "tweetIndex", columnList = "id,published")})
-public class Tweet {
+public class Tweet implements Serializable      {
 
     //region Constructor
 

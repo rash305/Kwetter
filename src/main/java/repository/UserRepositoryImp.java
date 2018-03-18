@@ -8,6 +8,7 @@ import org.eclipse.persistence.annotations.ReturnInsert;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +22,12 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public User getUser(int id) {
 
-        return em.find(User.class, id);
+        User returnUser =  em.find(User.class, id);
+        // Do a refresh so Following/followers gets updated
+        em.refresh(returnUser);
+        return returnUser;
+
+
     }
 
     @Override
@@ -49,7 +55,8 @@ public class UserRepositoryImp implements UserRepository {
 
     @Override
     public Collection<User> getFollowing(User user) {
-        return null;
+        em.refresh(user);
+        return user.getFollowing();
     }
 
     @Override
@@ -61,12 +68,37 @@ public class UserRepositoryImp implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        return null;
+        User userExists = em.find(User.class, user.getId());
+        if(userExists == null){
+            return null;
+        }
+        em.merge(user);
+        em.flush();
+        em.refresh(userExists);
+
+        return userExists;
     }
 
     @Override
-    public boolean removeUser(User user) {
+    public boolean removeUser(int id) {
+        User deleteUser = getUser(id);
+        if(deleteUser != null){
+            em.remove(deleteUser);
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public USER_ROLE getRole(int id) {
+
+        return em.find(USER_ROLE.class, id);
+    }
+
+    @Override
+    public List<USER_ROLE> getRoles() {
+
+        return em.createQuery("Select a from USER_ROLE a order by a.id",USER_ROLE.class).getResultList();
     }
 
     @Override
@@ -75,7 +107,6 @@ public class UserRepositoryImp implements UserRepository {
             em.persist(role);
         }
         return roles;
-
     }
 
     @Override

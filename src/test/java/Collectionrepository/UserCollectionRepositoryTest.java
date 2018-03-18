@@ -121,8 +121,8 @@ public class UserCollectionRepositoryTest {
         User repoUser = userRepository.createUser(user);
         assertEquals(userRepository.getUser(repoUser.getId()).getUserName(), oldUsername);
 
-        assertTrue(userRepository.removeUser(repoUser));
-        assertFalse(userRepository.removeUser(repoUser));
+        assertTrue(userRepository.removeUser(repoUser.getId()));
+        assertFalse(userRepository.removeUser(repoUser.getId()));
     }
 
 

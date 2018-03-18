@@ -12,6 +12,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +64,7 @@ public class init {
         createTweets();
     }
 
-    private void createRoles(){
+    private void createRoles() {
         userrole1 = new USER_ROLE("Standard");
         userrole2 = new USER_ROLE("Admin");
         Set<USER_ROLE> roles = new HashSet<>();
@@ -72,28 +73,48 @@ public class init {
         userRepository.createRoles(roles);
     }
 
-    private void createUsers(){
+    private void createUsers() {
 
 
         user1 = new User("Admin 1", "email1@gmail.com", "password", "Sittard", "This is my bio", "/avatar/default.png", "Website");
+        user1.setId(1);
         user1.addRole(userrole1);
         user1.addRole(userrole2);
-        User userPersisted = userRepository.createUser(user1);
+        try {
+            User userPersisted = userRepository.createUser(user1);
+        } catch (EntityExistsException ex) {
+
+        }
 
         user2 = new User("user 2", "email2@gmail.com", "password", "Sittard", "This is my bio", "/avatar/default.png", "Website");
+        user2.setId(2);
         user2.addRole(userrole1);
-        user2 = userRepository.createUser(user2);
+        try {
+            user2 = userRepository.createUser(user2);
+        } catch (EntityExistsException ex) {
 
+        }
         user3 = new User("user 3", "email3@gmail.com", "password", "Sittard", "This is my bio", "/avatar/default.png", "Website");
+        user3.setId(3);
         user3.addRole(userrole1);
-        user3 = userRepository.createUser(user3);
+        try {
+            user3 = userRepository.createUser(user3);
+        } catch (EntityExistsException ex) {
 
+        }
         user4 = new User("user 4", "email4@gmail.com", "password", "Sittard", "This is my bio", "/avatar/default.png", "Website");
         user4.addRole(userrole1);
-        user4 = userRepository.createUser(user4);
+        user4.addFollower(user1);
+        user4.addFollower(user2);
+        user4.Follow(user3);
+        try {
+            user4 = userRepository.createUser(user4);
+        } catch (EntityExistsException ex) {
+
+        }
     }
 
-    private void createTweets(){
+    private void createTweets() {
         tweet1 = new Tweet("Tweet message 1", user1);
         tweetRepository.createTweet(tweet1);
 

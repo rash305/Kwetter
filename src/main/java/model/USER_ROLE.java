@@ -3,6 +3,7 @@ package model;
 import javax.annotation.security.DeclareRoles;
 import javax.enterprise.inject.Model;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Set;
 @Model
 @Entity
 @Table
-public class USER_ROLE {
+public class USER_ROLE implements Serializable {
     private int id;
     private String name;
 

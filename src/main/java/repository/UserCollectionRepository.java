@@ -94,8 +94,31 @@ public class UserCollectionRepository implements UserRepository {
         return null;
     }
 
-    public boolean removeUser(User user) {
-        return userList.remove(user);
+    public boolean removeUser(int id) {
+        int index = 0;
+        for (User u: userList) {
+            if(u.getId() == id){
+                userList.remove(index);
+                return true;
+            }
+            index++;
+        }
+        return false;
+    }
+
+    public USER_ROLE getRole(int id) {
+        for (USER_ROLE ur: rolesList) {
+            if(ur.getId() == id){
+                return ur;
+            }
+        }
+        return null;
+    }
+
+    public List<USER_ROLE> getRoles() {
+        List<USER_ROLE> roles = new ArrayList<USER_ROLE>();
+        roles.addAll(rolesList);
+        return roles;
     }
 
     @Override
