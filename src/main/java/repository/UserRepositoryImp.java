@@ -22,9 +22,12 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public User getUser(int id) {
 
-        User returnUser =  em.find(User.class, id);
+        User returnUser = em.find(User.class, id);
         // Do a refresh so Following/followers gets updated
-        em.refresh(returnUser);
+        if (returnUser != null) {
+            em.refresh(returnUser);
+
+        }
         return returnUser;
 
 
@@ -48,16 +51,6 @@ public class UserRepositoryImp implements UserRepository {
         return null;
     }
 
-    @Override
-    public Collection<User> getFollowers(User user) {
-        return null;
-    }
-
-    @Override
-    public Collection<User> getFollowing(User user) {
-        em.refresh(user);
-        return user.getFollowing();
-    }
 
     @Override
     @ReturnInsert
@@ -69,7 +62,7 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public User updateUser(User user) {
         User userExists = em.find(User.class, user.getId());
-        if(userExists == null){
+        if (userExists == null) {
             return null;
         }
         em.merge(user);
@@ -82,7 +75,7 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public boolean removeUser(int id) {
         User deleteUser = getUser(id);
-        if(deleteUser != null){
+        if (deleteUser != null) {
             em.remove(deleteUser);
             return true;
         }
@@ -98,7 +91,7 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public List<USER_ROLE> getRoles() {
 
-        return em.createQuery("Select a from USER_ROLE a order by a.id",USER_ROLE.class).getResultList();
+        return em.createQuery("Select a from USER_ROLE a order by a.id", USER_ROLE.class).getResultList();
     }
 
     @Override

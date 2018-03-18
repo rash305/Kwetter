@@ -46,15 +46,22 @@ public class UserRestlayer{
     //<editor-fold Desc="Region GRUD">
     @POST
     @Consumes(APPLICATION_JSON)
-    @Path("createuser")
+    @Path("create")
     public User createUser(User user) {
+        if(user.getUserName() == null || user.getUserName().isEmpty()){
+            throw new WebApplicationException("Username is required", 400);
+        }
+        if(user.getEmail() == null || user.getEmail().isEmpty()){
+            throw new WebApplicationException("Email is required", 400);
+        }
+
         return userService.createUser(user);
     }
 
     @GET
     @Produces({APPLICATION_JSON})
     @Consumes(APPLICATION_JSON)
-    @Path("finduser/{id}")
+    @Path("get/{id}")
     public User findUser(@PathParam("id") int id) {
         User returnUser = null;
         try {
@@ -170,6 +177,8 @@ public class UserRestlayer{
     @Consumes(APPLICATION_JSON)
     @Path("{userid}/role")
     public boolean approveUserRole(@PathParam("userid") int userid, USER_ROLE roleid) {
+        //Except when role description is not set. Integer needs to be filled because it is an int value.
+
         return userService.approveRole(userid, roleid);
     }
 

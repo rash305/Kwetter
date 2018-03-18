@@ -106,7 +106,6 @@ public class init {
         user4.addRole(userrole1);
         user4.addFollower(user1);
         user4.addFollower(user2);
-        user4.Follow(user3);
         try {
             user4 = userRepository.createUser(user4);
         } catch (EntityExistsException ex) {
@@ -115,10 +114,13 @@ public class init {
     }
 
     private void createTweets() {
-        tweet1 = new Tweet("Tweet message 1", user1);
+        tweet1 = new Tweet("Tweet message #doggo #cat 1", user1);
+        tweet1.AddTag("doggo");
+        tweet1.AddTag("Cat");
         tweetRepository.createTweet(tweet1);
 
         tweet2 = new Tweet("Tweet message 2", user2);
+        tweet2.AddTag("Cat");
         tweetRepository.createTweet(tweet2);
         tweet3 = new Tweet("Tweet message 3", user3);
         tweetRepository.createTweet(tweet3);

@@ -7,6 +7,7 @@ package repository;
 
 import model.Tweet;
 import model.User;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import java.util.List;
 import javax.ejb.Stateless;
@@ -41,38 +42,86 @@ public class TweetRepositoryImp implements TweetRepository {
 
     @Override
     public Tweet getTweet(int id) {
-        return null;
+        return em.find(Tweet.class, id);
     }
 
     @Override
-    public List<Tweet> getAllTweets(int begin, int max) {
+    public List<Tweet> getAllTweets(DateTime aftertime) {
+        int pagesize = 50;
+        if(aftertime == null){
+            return em.createQuery("Select a from Tweet a WHERE a.published > CURRENT_TIMESTAMP order by a.published desc", Tweet.class)
+                    .getResultList();
+        }
+        return em.createQuery("Select a from Tweet a WHERE a.published > :time order by a.published desc", Tweet.class)
+                .setParameter("time",aftertime).setMaxResults(pagesize)
+                .getResultList();
+    }
+
+    @Override
+    public List<Tweet> getAllTweetsWithTag(DateTime AfterTime, String tag) {
+        if(AfterTime == null){
+            return em.createQuery("select t From Tweet t where  :tag member t.tags ORDER BY t.published DESC")
+                    .setParameter("tag", tag )
+                    .getResultList();
+
+        }
+        return em.createQuery("select t From Tweet t where  t.published > :time AND :tag member t.tags ORDER BY t.published DESC")
+                .setParameter("tag", tag )
+                .setParameter("time",AfterTime )
+                .getResultList();
+    }
+
+    @Override
+    public List<Tweet> getAllTweets(int begin, int max, User user) {
         return null;
     }
 
     @Override
     public Tweet updateTweet(Tweet tweet) {
-        try {
-            return em.merge(tweet);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        Tweet tweetExists = em.find(Tweet.class, tweet.getId());
+        if (tweetExists == null) {
             return null;
         }
+        em.merge(tweet);
+        em.flush();
+        em.refresh(tweetExists);
+        return tweetExists;
     }
 
     @Override
     public boolean removeTweet(Tweet tweet) {
+        Tweet findTweet = em.find(Tweet.class, tweet.getId());
+        if(findTweet != null) {
+            em.remove(tweet);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public List<Tweet> getTweetsOfUser(User user, int begin, int max) {
-        return null;
+    public List<Tweet> getTweetsOfUser(DateTime afterTime, User user) {
+        return em.createQuery("select t from Tweet t where t.tweetedBy = :user ORDER BY t.published DESC",Tweet.class )
+                .setParameter("user",user)
+                .getResultList();
     }
 
     @Override
-    public List<Tweet> getTweetsFollowing(User myAccount, int begin, int max) {
-        return null;
+    public List<Tweet> getTweetsMentioned(User user) {
+        return em.createQuery("select t From Tweet t where :user member t.mentions ORDER BY t.published DESC")
+                .setParameter("user", user )
+                .getResultList();    }
+
+    @Override
+    public List<String> getTrends(){
+        return em.createNamedQuery("Tweet.getCurrentTrends").getResultList();
     }
 
 
+    @Override
+    public List<Tweet> getTweetsFollowing(User myAccount, int begin, int max) {
+        return  em.createNamedQuery("Tweet.getTweetsOfFollowing").
+                setParameter("userid", myAccount.getId())
+                .setMaxResults(10)
+                .getResultList();
+    }
 }

@@ -43,6 +43,8 @@ public class User implements Serializable {
         this.avatarPath = avatarPath;
         this.website = website;
         this.roles = roles;
+        this.addFollower(this);
+
     }
 
     /**
@@ -63,6 +65,7 @@ public class User implements Serializable {
         this.avatarPath = avatarPath;
         this.website = website;
         this.roles = new HashSet<>();
+        this.addFollower(this);
     }
 
 
@@ -222,6 +225,7 @@ public class User implements Serializable {
 
     //region Methods
 
+/*
     public boolean Follow(User user) {
         int followCount = following.size();
         following.add(user);
@@ -233,6 +237,7 @@ public class User implements Serializable {
         following.remove(user);
         return (followCount != following.size());
     }
+*/
 
     public boolean addFollower(User user) {
         int followCount = followers.size();

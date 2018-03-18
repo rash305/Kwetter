@@ -16,10 +16,6 @@ public interface UserRepository {
 
     List<User> findUserByName(String username);
 
-    Collection<User> getFollowers(User user);
-
-    Collection<User> getFollowing(User user);
-
     User createUser(User user);
 
     User updateUser(User user);
