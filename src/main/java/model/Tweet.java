@@ -1,10 +1,8 @@
 package model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import javax.enterprise.inject.Model;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -13,9 +11,31 @@ import java.util.*;
  */
 @Model
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Tweet.getTweetsOfFollowing",
+                query = "SELECT t\n"
+                        + "FROM User u, Tweet t\n"
+                        + "INNER JOIN t.tweetedBy tb"
+                        + "INNER JOIN u.following uf \n"
+                        + "INNER JOIN User u2 \n"
+                        + "WHERE t.id = uf.id\n"
+                        + "AND u2.id = uf.id \n"
+                        + "AND u.id = :userid"
+                        + " order by t.published desc ")
+       })
+@NamedNativeQueries(
+        @NamedNativeQuery(name = "Tweet.getCurrentTrends",
+                query = "SELECT `tweet_tags`.`TAGS`" +
+                        " FROM `tweet_tags` " +
+                        "LEFT JOIN `tweet` ON `tweet`.`ID` = `tweet_tags`.`Tweet_ID` " +
+                        "WHERE `tweet`.`PUBLISHED`  >= now() - INTERVAL 1 DAY " +
+                        "GROUP BY `tweet_tags`.`TAGS` " +
+                        "ORDER BY COUNT(`tweet_tags`.`Tweet_ID`) " +
+                        "DESC ")
+)
 //Index published data because most of the queries will use a sort based on date
 @Table(indexes = {@Index(name = "tweetIndex", columnList = "id,published")})
-public class Tweet {
+public class Tweet implements Serializable      {
 
     //region Constructor
 
@@ -26,7 +46,7 @@ public class Tweet {
     public Tweet(String message, User tweetedBy) {
         this.message = message;
         this.tweetedBy = tweetedBy;
-        tweetedBy.AddTweet(this);
+        tweetedBy.addTweet(this);
     }
 
     //endregion
@@ -38,20 +58,20 @@ public class Tweet {
     private int id;
     private String message = null;
 
-    @ManyToOne
+    @ElementCollection
     private List<String> tags = new ArrayList<String>();
-    @ManyToOne
+
+    @ManyToOne (cascade = CascadeType.ALL)
     private User tweetedBy = null;
-    @OneToMany
+    @OneToMany (cascade = CascadeType.ALL)
     private Set<User> likes  = new HashSet<User>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<User> mentions = new ArrayList<User>();
 
 
     @Basic(optional = false)
     @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp published = null;
+    private Date published = null;
     //endregion
 
 
@@ -81,9 +101,10 @@ public class Tweet {
         return mentions;
     }
 
-    public Timestamp getPublished() {
+    public Date getPublished() {
         return published;
     }
+
 
     //endregion
 

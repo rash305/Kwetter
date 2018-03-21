@@ -1,15 +1,18 @@
 package model;
 
 import javax.annotation.security.DeclareRoles;
+import javax.enterprise.inject.Model;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Created by Sjoerd on 26-2-2018.
  */
+@Model
 @Entity
-@Table(name = "user_role")
-public class USER_ROLE {
+@Table
+public class USER_ROLE implements Serializable {
     private int id;
     private String name;
 
@@ -32,6 +35,9 @@ public class USER_ROLE {
     }
 
 
+    public USER_ROLE(){
+
+    }
 
     public USER_ROLE(String name) {
         this.name = name;

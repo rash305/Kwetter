@@ -1,23 +1,39 @@
 package model;
 
 import javax.enterprise.inject.Model;
-import javax.management.relation.Role;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
-import javax.swing.plaf.synth.Region;
+import java.io.Serializable;
 import java.util.*;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.REFRESH;
 
 /**
  * Created by Sjoerd on 26-2-2018.
  */
 @Entity
 @Model
-public  class User {
+public class User implements Serializable {
 
     //region Constructor
 
+    /**
+     * Empty constructor of the user
+     */
     public User() {
     }
 
+    /**
+     * @param userName
+     * @param email
+     * @param encryptedPassword
+     * @param location
+     * @param bio
+     * @param avatarPath
+     * @param website
+     * @param roles
+     */
     public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website, Set<USER_ROLE> roles) {
         this.userName = userName;
         this.email = email;
@@ -27,7 +43,31 @@ public  class User {
         this.avatarPath = avatarPath;
         this.website = website;
         this.roles = roles;
+        this.addFollower(this);
+
     }
+
+    /**
+     * @param userName
+     * @param email
+     * @param encryptedPassword
+     * @param location
+     * @param bio
+     * @param avatarPath
+     * @param website
+     */
+    public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website) {
+        this.userName = userName;
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;
+        this.location = location;
+        this.bio = bio;
+        this.avatarPath = avatarPath;
+        this.website = website;
+        this.roles = new HashSet<>();
+        this.addFollower(this);
+    }
+
 
     //endregion
 
@@ -43,17 +83,26 @@ public  class User {
     private String avatarPath;
     private String website;
     @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<USER_ROLE> roles;
 
-    @OneToMany(fetch = FetchType.LAZY)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweetedBy", cascade = ALL)
     private Collection<Tweet> tweets = new HashSet<Tweet>();
-    @OneToMany(fetch = FetchType.LAZY)
-    @ManyToMany()
-    private Collection<User> following = new HashSet<User>();
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable()
-    private Collection<User> followers= new HashSet<User>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            joinColumns = @JoinColumn(name = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "following_id"))
+
+    @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    private Set<User> following = new HashSet<User>();
+    //@ManyToMany(fetch = FetchType.LAZY, mappedBy="following")
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "following_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_by"))
+    private Set<User> followers = new HashSet<User>();
+
 
     //endregion
 
@@ -96,14 +145,17 @@ public  class User {
         return roles;
     }
 
+    @JsonbTransient
     public Collection<Tweet> getTweets() {
         return tweets;
     }
 
+    @JsonbTransient
     public Collection<User> getFollowing() {
         return following;
     }
 
+    @JsonbTransient
     public Collection<User> getFollowers() {
         return followers;
     }
@@ -150,7 +202,10 @@ public  class User {
     }
 
     public void setFollowing(Collection<User> following) {
-        this.following = following;
+        for (User user : following) {
+            this.following.add(user);
+
+        }
     }
 
     public void setRoles(Set<USER_ROLE> roles) {
@@ -158,48 +213,68 @@ public  class User {
     }
 
     public void setFollowers(Collection<User> followers) {
-        this.followers = followers;
+
+        for (User user : followers) {
+            this.followers.add(user);
+
+        }
     }
+
 
     //
 
     //region Methods
 
-    public boolean Follow(User user){
+/*
+    public boolean Follow(User user) {
         int followCount = following.size();
         following.add(user);
         return (followCount != following.size());
     }
 
-    public boolean UnFollow(User user){
+    public boolean unFollow(User user) {
         int followCount = following.size();
         following.remove(user);
         return (followCount != following.size());
     }
+*/
 
-    public boolean AddFollower(User user){
+    public boolean addFollower(User user) {
         int followCount = followers.size();
         followers.add(user);
         return (followCount != followers.size());
     }
 
-    public boolean LoseFollower(User user){
+    public boolean loseFollower(User user) {
         int followCount = followers.size();
         followers.remove(user);
         return (followCount != followers.size());
     }
 
-    public boolean AddTweet(Tweet tweet){
-            int tweetCount = tweets.size();
-            tweets.add(tweet);
-            return (tweetCount != tweets.size());
+    public boolean addTweet(Tweet tweet) {
+        int tweetCount = tweets.size();
+        tweets.add(tweet);
+        return (tweetCount != tweets.size());
 
     }
 
-    public boolean DeleteTweet(Tweet tweet){
+    public boolean deleteTweet(Tweet tweet) {
         int tweetCount = tweets.size();
         tweets.remove(tweet);
         return (tweetCount != tweets.size());
+    }
+
+    public boolean addRole(USER_ROLE role) {
+        int roleCount = roles.size();
+        roles.add(role);
+        return (roleCount != roles.size());
+
+    }
+
+    public boolean deleteRole(USER_ROLE role) {
+        int roleCount = roles.size();
+        roles.remove(role);
+        return (roleCount != roles.size());
     }
     //endregion
 }

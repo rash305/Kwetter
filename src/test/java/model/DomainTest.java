@@ -1,6 +1,5 @@
 package model;
 
-import junit.framework.TestCase;
 import org.junit.*;
 
 import java.util.*;
@@ -102,10 +101,10 @@ public class DomainTest {
         Assert.assertEquals(tweet.getTweetedBy(), user0);
 
         //Validate add no double tweets
-        Assert.assertFalse(user0.AddTweet(tweet));
+        Assert.assertFalse(user0.addTweet(tweet));
 
         //validate tweet delete
-        Assert.assertTrue(user0.DeleteTweet(tweet));
+        Assert.assertTrue(user0.deleteTweet(tweet));
         Assert.assertTrue(user0.getTweets().isEmpty());
 
         Tweet emptyTweet = new Tweet();
