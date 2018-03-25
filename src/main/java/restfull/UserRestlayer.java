@@ -1,20 +1,18 @@
 package restfull;
 
-import model.USER_ROLE;
-import model.User;
+import model.Group;
+import model.Account;
 
 import service.TweetService;
 import service.UserService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.management.relation.Role;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -39,7 +37,7 @@ public class UserRestlayer{
     private TweetService tweetService;
 
  //   @GET
-  //  public List<User> getUser(String name) {
+  //  public List<Account> getUser(String name) {
 ///        return userService.findUserByName(name);
  //   }
 
@@ -47,61 +45,61 @@ public class UserRestlayer{
     @POST
     @Consumes(APPLICATION_JSON)
     @Path("create")
-    public User createUser(User user) {
-        if(user.getUserName() == null || user.getUserName().isEmpty()){
+    public Account createUser(Account account) {
+        if(account.getUserName() == null || account.getUserName().isEmpty()){
             throw new WebApplicationException("Username is required", 400);
         }
-        if(user.getEmail() == null || user.getEmail().isEmpty()){
+        if(account.getEmail() == null || account.getEmail().isEmpty()){
             throw new WebApplicationException("Email is required", 400);
         }
 
-        return userService.createUser(user);
+        return userService.createUser(account);
     }
 
     @GET
     @Produces({APPLICATION_JSON})
     @Consumes(APPLICATION_JSON)
     @Path("get/{id}")
-    public User findUser(@PathParam("id") int id) {
-        User returnUser = null;
+    public Account findUser(@PathParam("id") int id) {
+        Account returnAccount = null;
         try {
-            returnUser = userService.getUser(id);
+            returnAccount = userService.getUser(id);
         }
         catch (PersistenceException PersistEx){
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnUser;
+        return returnAccount;
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("{page}")
-    public List<User> getUsers(@PathParam("page") int page) {
-        List<User> returnUser = null;
+    public List<Account> getUsers(@PathParam("page") int page) {
+        List<Account> returnAccount = null;
         try {
-            returnUser = userService.getUsers(page);
+            returnAccount = userService.getUsers(page);
 
         }
         catch (PersistenceException PersistEx){
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnUser;
+        return returnAccount;
     }
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("")
-    public List<User> getUsers() {
-        List<User> returnUser = null;
+    public List<Account> getUsers() {
+        List<Account> returnAccount = null;
         try {
-            returnUser = userService.getUsers();
+            returnAccount = userService.getUsers();
         }
         catch (PersistenceException PersistEx){
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnUser;
+        return returnAccount;
     }
 
     @DELETE
@@ -112,21 +110,21 @@ public class UserRestlayer{
     }
     //</editor-fold>
 
-    //<editor-fold Desc="User functionality">
+    //<editor-fold Desc="Account functionality">
     @PUT
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @Path("update")
-    public User updateUser(User user) {
-        return userService.updateUser(user);
+    public Account updateUser(Account account) {
+        return userService.updateUser(account);
     }
 
     @GET
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @Path("following/{id}")
-    public List<User> getFollowing(@PathParam("id") int id) {
-        List<User> following = new ArrayList<>();
+    public List<Account> getFollowing(@PathParam("id") int id) {
+        List<Account> following = new ArrayList<>();
         following.addAll(userService.getFollowing(id));
         return following;
     }
@@ -134,8 +132,8 @@ public class UserRestlayer{
     @GET
     @Produces(APPLICATION_JSON)
     @Path("followers/{id}")
-    public List<User> getFollowers(@PathParam("id") int id) {
-        List<User> following = new ArrayList<>();
+    public List<Account> getFollowers(@PathParam("id") int id) {
+        List<Account> following = new ArrayList<>();
         following.addAll(userService.getFollowers(id));
         return following;
     }
@@ -161,8 +159,8 @@ public class UserRestlayer{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("roles")
-    public List<USER_ROLE> getRoles() {
-        List<USER_ROLE> returnRoles = null;
+    public List<Group> getRoles() {
+        List<Group> returnRoles = null;
         try {
             returnRoles = userService.getRoles();
         }
@@ -176,7 +174,7 @@ public class UserRestlayer{
     @PUT
     @Consumes(APPLICATION_JSON)
     @Path("{userid}/role")
-    public boolean approveUserRole(@PathParam("userid") int userid, USER_ROLE roleid) {
+    public boolean approveUserRole(@PathParam("userid") int userid, Group roleid) {
         //Except when role description is not set. Integer needs to be filled because it is an int value.
 
         return userService.approveRole(userid, roleid);

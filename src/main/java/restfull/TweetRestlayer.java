@@ -1,8 +1,6 @@
 package restfull;
 
 import model.Tweet;
-import model.USER_ROLE;
-import model.User;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import service.TweetService;
 import service.UserService;
@@ -13,7 +11,6 @@ import javax.persistence.PersistenceException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -37,7 +34,7 @@ public class TweetRestlayer {
     private TweetService tweetService;
 
     //   @GET
-    //  public List<User> getUser(String name) {
+    //  public List<Account> getUser(String name) {
 ///        return userService.findUserByName(name);
     //   }
 
@@ -72,7 +69,7 @@ public class TweetRestlayer {
         try {
             return tweetService.getTweetsFollowing(id, 0, 99999);
         } catch (Exception ex) {
-            throw new WebApplicationException("User can not be found", Response.Status.NOT_FOUND);
+            throw new WebApplicationException("Account can not be found", Response.Status.NOT_FOUND);
         }
     }
 

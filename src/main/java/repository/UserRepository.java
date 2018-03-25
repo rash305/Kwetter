@@ -1,7 +1,7 @@
 package repository;
 
-import model.USER_ROLE;
-import model.User;
+import model.Account;
+import model.Group;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,25 +10,25 @@ import java.util.List;
  * Created by Sjoerd on 26-2-2018.
  */
 public interface UserRepository {
-    User getUser(int id);
+    Account getUser(int id);
 
-    List<User> getUsers(int page);
+    List<Account> getUsers(int page);
 
-    List<User> findUserByName(String username);
+    List<Account> findUserByName(String username);
 
-    User createUser(User user);
+    Account createUser(Account account);
 
-    User updateUser(User user);
+    Account updateUser(Account account);
 
     boolean removeUser(int id);
 
-    Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles);
-    USER_ROLE getRole(int id);
-    List<USER_ROLE> getRoles();
+    Collection<Group> createRoles(Collection<Group> roles);
+    Group getRole(int id);
+    List<Group> getRoles();
 
     //Not used outside this application (In service layer etc.) Maybe in future.
     //Roles are only created/verified when starting the application
-    USER_ROLE createRole(USER_ROLE role);
-    boolean removeRole(USER_ROLE role);
+    Group createRole(Group role);
+    boolean removeRole(Group role);
 
 }

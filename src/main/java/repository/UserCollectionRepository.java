@@ -1,7 +1,7 @@
 package repository;
 
-import model.USER_ROLE;
-import model.User;
+import model.Account;
+import model.Group;
 
 import javax.ejb.Stateless;
 import java.util.ArrayList;
@@ -15,13 +15,13 @@ import java.util.List;
 @Stateless
 public class UserCollectionRepository implements UserRepository {
 
-    List<User> userList;
-    Collection<USER_ROLE> rolesList;
+    List<Account> accountList;
+    Collection<Group> rolesList;
     int userid = -1;
     int roleid = -1;
 
     public UserCollectionRepository() {
-        userList = new ArrayList();
+        accountList = new ArrayList();
         rolesList = new HashSet<>();
 
     }
@@ -33,18 +33,18 @@ public class UserCollectionRepository implements UserRepository {
         return roleid++;
     }
 
-    public List<User> findUserByName(String name){
-        List<User> foundUsers = new ArrayList<User>();
-        for (User u: userList) {
+    public List<Account> findUserByName(String name){
+        List<Account> foundAccounts = new ArrayList<Account>();
+        for (Account u: accountList) {
             if(u.getUserName().startsWith(name)){
-                foundUsers.add(u);
+                foundAccounts.add(u);
             }
         }
-        return foundUsers;
+        return foundAccounts;
     }
 
-    public User getUser(int id) {
-        for (User u: userList) {
+    public Account getUser(int id) {
+        for (Account u: accountList) {
             if(u.getId() == id){
                 return u;
             }
@@ -53,42 +53,42 @@ public class UserCollectionRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getUsers(int page) {
+    public List<Account> getUsers(int page) {
         //ignore page
-        return userList;
+        return accountList;
     }
 
-    public Collection<User> getFollowers(User user) {
+    public Collection<Account> getFollowers(Account account) {
 
-        for (User u: userList) {
-            if(u.getId() == user.getId()){
+        for (Account u: accountList) {
+            if(u.getId() == account.getId()){
                 return u.getFollowers();
             }
         }
         return null;
     }
 
-    public Collection<User> getFollowing(User user) {
-        for (User u: userList) {
-            if(u.getId() == user.getId()){
+    public Collection<Account> getFollowing(Account account) {
+        for (Account u: accountList) {
+            if(u.getId() == account.getId()){
                 return u.getFollowing();
             }
         }
         return null;
     }
 
-    public User createUser(User user) {
-        user.setId(getNewUserId());
-        userList.add(user);
+    public Account createUser(Account account) {
+        account.setId(getNewUserId());
+        accountList.add(account);
 
-        return user;
+        return account;
     }
 
-    public User updateUser(User user) {
-        for (User u: userList) {
-            if(u.getId() == user.getId()){
-                userList.set(userList.indexOf(user), user );
-                return user;
+    public Account updateUser(Account account) {
+        for (Account u: accountList) {
+            if(u.getId() == account.getId()){
+                accountList.set(accountList.indexOf(account), account);
+                return account;
             }
         }
         return null;
@@ -96,9 +96,9 @@ public class UserCollectionRepository implements UserRepository {
 
     public boolean removeUser(int id) {
         int index = 0;
-        for (User u: userList) {
+        for (Account u: accountList) {
             if(u.getId() == id){
-                userList.remove(index);
+                accountList.remove(index);
                 return true;
             }
             index++;
@@ -106,25 +106,25 @@ public class UserCollectionRepository implements UserRepository {
         return false;
     }
 
-    public USER_ROLE getRole(int id) {
-        for (USER_ROLE ur: rolesList) {
-            if(ur.getId() == id){
+    public Group getRole(int id) {
+        for (Group ur: rolesList) {
+   //         if(ur.getId() == id){
                 return ur;
-            }
+    //        }
         }
         return null;
     }
 
-    public List<USER_ROLE> getRoles() {
-        List<USER_ROLE> roles = new ArrayList<USER_ROLE>();
+    public List<Group> getRoles() {
+        List<Group> roles = new ArrayList<Group>();
         roles.addAll(rolesList);
         return roles;
     }
 
     @Override
-    public Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles) {
-        for (USER_ROLE role: roles) {
-            role.setId(getNewRoleId());
+    public Collection<Group> createRoles(Collection<Group> roles) {
+        for (Group role: roles) {
+     //       role.setId(getNewRoleId());
 
         }
         this.rolesList.addAll(roles);
@@ -133,15 +133,15 @@ public class UserCollectionRepository implements UserRepository {
     }
 
     @Override
-    public USER_ROLE createRole(USER_ROLE role) {
-        role.setId(getNewRoleId());
+    public Group createRole(Group role) {
+ //       role.setId(getNewRoleId());
         rolesList.add(role);
 
         return role;
     }
 
     @Override
-    public boolean removeRole(USER_ROLE role) {
+    public boolean removeRole(Group role) {
         boolean returnValue;
         if(returnValue = rolesList.contains(role))
             returnValue = true;

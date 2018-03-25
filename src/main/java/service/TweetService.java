@@ -1,7 +1,7 @@
 package service;
 
+import model.Account;
 import model.Tweet;
-import model.User;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import repository.*;
 
@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,15 +56,15 @@ public class TweetService {
     }
 
     public List<Tweet> getTweetsOfUser(DateTime afterTime, int userid) {
-        User user = userRepository.getUser(userid);
-        if(user == null){
-            throw new NotFoundException("User not found");
+        Account account = userRepository.getUser(userid);
+        if(account == null){
+            throw new NotFoundException("Account not found");
         }
-        return tweetRepository.getTweetsOfUser(afterTime, user);
+        return tweetRepository.getTweetsOfUser(afterTime, account);
     }
 
     public Tweet addLike(Tweet tweet, int userid) {
-        User loggedin = userRepository.getUser(userid);
+        Account loggedin = userRepository.getUser(userid);
         tweet = tweetRepository.getTweet(tweet.getId());
         if(loggedin == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
@@ -79,7 +78,7 @@ public class TweetService {
     }
 
     public Tweet dislike(Tweet tweet, int userid) {
-        User loggedin = userRepository.getUser(userid);
+        Account loggedin = userRepository.getUser(userid);
         tweet = tweetRepository.getTweet(tweet.getId());
         if(loggedin == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
@@ -93,22 +92,22 @@ public class TweetService {
     }
 
     //Region JPA will handle this logic
-    public Collection<User> getTweetLikes(Tweet tweet) {
+    public Collection<Account> getTweetLikes(Tweet tweet) {
         return tweet.getLikes();
     }
 
-    public Collection<User> getLikes(Tweet tweet) {
+    public Collection<Account> getLikes(Tweet tweet) {
         return tweet.getLikes();
     }
 
 
     public List<Tweet> getTweetsFollowing(int userid, int minIndex, int maxIndex){
 
-        User loggedinUser = userRepository.getUser(userid);
-        if(loggedinUser== null ){
+        Account loggedinAccount = userRepository.getUser(userid);
+        if(loggedinAccount == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
-        return tweetRepository.getTweetsFollowing(loggedinUser, minIndex, maxIndex);
+        return tweetRepository.getTweetsFollowing(loggedinAccount, minIndex, maxIndex);
     }
 
     public List<String> getTrends(){
@@ -120,11 +119,11 @@ public class TweetService {
     }
 
     public List<Tweet> getMentionedTweet(int userid) {
-        User loggedinUser = userRepository.getUser(userid);
-        if(loggedinUser== null ){
+        Account loggedinAccount = userRepository.getUser(userid);
+        if(loggedinAccount == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
-        return tweetRepository.getTweetsMentioned(loggedinUser);
+        return tweetRepository.getTweetsMentioned(loggedinAccount);
     }
 
 

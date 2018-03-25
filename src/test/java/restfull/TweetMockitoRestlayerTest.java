@@ -1,19 +1,13 @@
 package restfull;
 
-import com.google.gson.Gson;
 import model.Tweet;
-import model.User;
-import org.apache.http.client.methods.HttpUriRequest;
+import model.Account;
 import org.junit.*;
 import org.mockito.Mock;
 import repository.*;
 import service.TweetService;
 import service.UserService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +30,17 @@ public class TweetMockitoRestlayerTest {
     @Mock
     private List<String> tags = null;
     @Mock
-    private List<User> users = null;
+    private List<Account> accounts = null;
     @Mock
     private Tweet tweet1 = null;
     @Mock
     private Tweet tweet2 = null;
     @Mock
-    private User user1 = null;
+    private Account account1 = null;
     @Mock
-    private User user2 = null;
+    private Account account2 = null;
     @Mock
-    private User user3 = null;
+    private Account account3 = null;
 
 
 
@@ -68,24 +62,24 @@ public class TweetMockitoRestlayerTest {
 
         tweetService.UseCollectionRepository();
 
-        users = mock(ArrayList.class);
+        accounts = mock(ArrayList.class);
         tags = mock(ArrayList.class);
         tags.add("Konijn");
         tags.add("cavia");
         tweets = mock(ArrayList.class);
 
-        user1 = mock(User.class);
+        account1 = mock(Account.class);
 
-        user2 = mock(User.class);
-        users.add(user2);
-        user3 = mock(User.class);
-        users.add(user3);
+        account2 = mock(Account.class);
+        accounts.add(account2);
+        account3 = mock(Account.class);
+        accounts.add(account3);
 
         tweet1 = mock(Tweet.class);
         tweet2 = mock(Tweet.class);
 
-        user1.setId(1);
-        Tweet tweet1 = new Tweet("Tweet message #doggo #cat 1", user1);
+        account1.setId(1);
+        Tweet tweet1 = new Tweet("Tweet message #doggo #cat 1", account1);
 
 
         tweetService.createTweet(tweet1);
@@ -104,7 +98,23 @@ public class TweetMockitoRestlayerTest {
         verify(tweetRepo).getAllTweets(null);
     }
 
+    @Test
+    public void testGetAllTweetsOfUser() {
+        Account account2 = new Account();
+        account2.setId(99);
+        List<Tweet> tweetList = new ArrayList<>();
+        Tweet tweet1 = new Tweet("Tweet message 3", account3);
+        tweetList.add(tweet1);
+        account2.addTweet(tweet1);
 
+        when(userRepo.getUser(99)).thenReturn(account2);
+
+        when(tweetRepo.getTweetsOfUser(null, account1)).thenReturn(tweetList);
+        assertTrue(tweetList.containsAll(tweetService.getTweetsOfUser(null, account2.getId())));
+        assertTrue(tweetList.containsAll(tweetRepo.getTweetsOfUser(null, account2)));
+        verify(tweetRepo).getTweetsOfUser(null, account2);
+        verify(tweetService).getTweetsOfUser(null, account2.getId());
+    }
 
 
 }

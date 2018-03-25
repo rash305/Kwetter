@@ -1,7 +1,7 @@
 package service;
 
-import model.USER_ROLE;
-import model.User;
+import model.Account;
+import model.Group;
 import repository.JPA;
 import repository.UserRepository;
 
@@ -22,120 +22,120 @@ public class UserService {
 
     //Region Methods.
 
-    public User getUser(int id){
-        User returnUser = null;
-        returnUser = userRepository.getUser(id);
+    public Account getUser(int id){
+        Account returnAccount = null;
+        returnAccount = userRepository.getUser(id);
 
-        if(returnUser == null){
-            throw new NotFoundException( String.format("User with id %d does not exists", id));
+        if(returnAccount == null){
+            throw new NotFoundException( String.format("Account with id %d does not exists", id));
         }
-        return returnUser;
+        return returnAccount;
     }
 
-    public List<User> getUsers(int page){
-        List<User> returnUser = null;
-        returnUser = userRepository.getUsers(page);
+    public List<Account> getUsers(int page){
+        List<Account> returnAccount = null;
+        returnAccount = userRepository.getUsers(page);
 
-        if(returnUser == null || returnUser.isEmpty()){
+        if(returnAccount == null || returnAccount.isEmpty()){
             throw new NotFoundException( String.format("Users can not be found"));
         }
-        return returnUser;
+        return returnAccount;
     }
 
-    public List<User> getUsers(){
-        List<User> returnUser = null;
-        returnUser = userRepository.getUsers(-1);
-        if(returnUser == null || returnUser.isEmpty()){
+    public List<Account> getUsers(){
+        List<Account> returnAccount = null;
+        returnAccount = userRepository.getUsers(-1);
+        if(returnAccount == null || returnAccount.isEmpty()){
             throw new NotFoundException( String.format("Users can not be found"));
         }
-        return returnUser;
+        return returnAccount;
     }
 
-    public List<User> getUserByName(String name){
+    public List<Account> getUserByName(String name){
         return userRepository.findUserByName(name);
     }
 
-    public User createUser(User user){
-        return userRepository.createUser(user);
+    public Account createUser(Account account){
+        return userRepository.createUser(account);
     }
 
-    public User updateUser(User user){
-        return userRepository.updateUser(user);
+    public Account updateUser(Account account){
+        return userRepository.updateUser(account);
     }
 
     public boolean removeUser(int id){
         return userRepository.removeUser(id);
     }
 
-    public Collection<User> getFollowers(int id){
-        User user = userRepository.getUser(id);
-        return user.getFollowers();    }
+    public Collection<Account> getFollowers(int id){
+        Account account = userRepository.getUser(id);
+        return account.getFollowers();    }
 
-    public Collection<User> getFollowing(int id){
-        User user = userRepository.getUser(id);
-        return user.getFollowing();
+    public Collection<Account> getFollowing(int id){
+        Account account = userRepository.getUser(id);
+        return account.getFollowing();
     }
 
 
     public boolean addFollower(int id, int loggedinId) {
-        User targetUser = userRepository.getUser(id);
-        User loggedInUser = userRepository.getUser(loggedinId);
-        if(loggedInUser == null ){
+        Account targetAccount = userRepository.getUser(id);
+        Account loggedInAccount = userRepository.getUser(loggedinId);
+        if(loggedInAccount == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
-        if(targetUser == null ){
+        if(targetAccount == null ){
             throw new NotFoundException( String.format("Target user can not be found"));
         }
 
-        boolean returnValue = targetUser.addFollower(loggedInUser);
-        userRepository.updateUser(targetUser);
+        boolean returnValue = targetAccount.addFollower(loggedInAccount);
+        userRepository.updateUser(targetAccount);
 
         return returnValue;
     }
 
     public boolean removeFollower(int id, int loggedinId) {
-        User targetUser = userRepository.getUser(id);
-        User loggedInUser = userRepository.getUser(loggedinId);
-        if(loggedInUser == null ){
+        Account targetAccount = userRepository.getUser(id);
+        Account loggedInAccount = userRepository.getUser(loggedinId);
+        if(loggedInAccount == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
-        if(targetUser == null ){
+        if(targetAccount == null ){
             throw new NotFoundException( String.format("Target user can not be found"));
         }
 
-        boolean returnValue = targetUser.loseFollower(loggedInUser);
-        userRepository.updateUser(targetUser);
+        boolean returnValue = targetAccount.loseFollower(loggedInAccount);
+        userRepository.updateUser(targetAccount);
 
         return returnValue;
 
     }
 
-    public List<USER_ROLE> getRoles(){
+    public List<Group> getRoles(){
         return userRepository.getRoles();
     }
 
-    public boolean approveRole(int userid, USER_ROLE role){
-        User updateUser = userRepository.getUser(userid);
-        if(updateUser == null){
-            throw new NotFoundException( String.format("User can not be found"));
+    public boolean approveRole(int userid, Group role){
+        Account updateAccount = userRepository.getUser(userid);
+        if(updateAccount == null){
+            throw new NotFoundException( String.format("Account can not be found"));
         }
-        if(updateUser.addRole(role)){
-            userRepository.updateUser(updateUser);
+        if(updateAccount.addRole(role)){
+            userRepository.updateUser(updateAccount);
             return true;
         }return false;
     }
 
     public boolean revokeRole(int userid, int roleid){
-        User updateUser = userRepository.getUser(userid);
-        USER_ROLE role = userRepository.getRole(roleid);
-        if(updateUser == null){
-            throw new NotFoundException( String.format("User can not be found"));
+        Account updateAccount = userRepository.getUser(userid);
+        Group role = userRepository.getRole(roleid);
+        if(updateAccount == null){
+            throw new NotFoundException( String.format("Account can not be found"));
         }
         if(role== null){
             throw new NotFoundException( String.format("Role can not be found"));
         }
-        if(updateUser.deleteRole(role)){
-            userRepository.updateUser(updateUser);
+        if(updateAccount.deleteRole(role)){
+            userRepository.updateUser(updateAccount);
             return true;
         }return false;
     }

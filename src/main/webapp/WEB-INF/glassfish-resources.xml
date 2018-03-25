@@ -14,3 +14,6 @@
     <jdbc-resource enabled="true" jndi-name="java:app/jdbc/kwetter" object-type="user" pool-name="kwetterPool"/>
 
 </resources>
+
+
+

@@ -9,16 +9,16 @@ import java.util.*;
  */
 public class DomainTest {
 
-    User user0;
-    User user1;
-    User user2;
-    User user3;
-    User user4;
-    User user5;
-    User user6;
-    User user7;
-    User user8;
-    User user9;
+    Account account0;
+    Account account1;
+    Account account2;
+    Account account3;
+    Account account4;
+    Account account5;
+    Account account6;
+    Account account7;
+    Account account8;
+    Account account9;
 
     Tweet tweet0;
     Tweet tweet1;
@@ -42,36 +42,36 @@ public class DomainTest {
     @Before
     public void setUp() throws Exception {
 
-        Set<USER_ROLE> roles = new HashSet<USER_ROLE>();
-        roles.add(new USER_ROLE("standard"));
-        user0 = new User("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
+        Set<Group> roles = new HashSet<Group>();
+        roles.add(new Group("standard"));
+        account0 = new Account("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
 
-        user1 = new User();
-        tweet1 = new Tweet("Tweet 1", user1);
+        account1 = new Account();
+        tweet1 = new Tweet("Tweet 1", account1);
 
-        user2 = new User();
-        tweet2 = new Tweet("Tweet 2", user2);
+        account2 = new Account();
+        tweet2 = new Tweet("Tweet 2", account2);
 
-        user3 = new User();
-        tweet3 = new Tweet("Tweet 3", user3);
+        account3 = new Account();
+        tweet3 = new Tweet("Tweet 3", account3);
 
-        user4 = new User();
-        tweet4 = new Tweet("Tweet 4", user4);
+        account4 = new Account();
+        tweet4 = new Tweet("Tweet 4", account4);
 
-        user5 = new User();
-        tweet5 = new Tweet("Tweet 5", user5);
+        account5 = new Account();
+        tweet5 = new Tweet("Tweet 5", account5);
 
-        user6 = new User();
-        tweet6 = new Tweet("Tweet 6", user6);
+        account6 = new Account();
+        tweet6 = new Tweet("Tweet 6", account6);
 
-        user7 = new User();
-        tweet7 = new Tweet("Tweet 7", user7);
+        account7 = new Account();
+        tweet7 = new Tweet("Tweet 7", account7);
 
-        user8 = new User();
-        tweet8 = new Tweet("Tweet 8", user8);
+        account8 = new Account();
+        tweet8 = new Tweet("Tweet 8", account8);
 
-        user9 = new User();
-        tweet9 = new Tweet("Tweet 9", user9);
+        account9 = new Account();
+        tweet9 = new Tweet("Tweet 9", account9);
 
     }
 
@@ -86,7 +86,7 @@ public class DomainTest {
     @org.junit.Test
     public void testTweet(){
         String tweetMessage = "Test Tweet message";
-        Tweet tweet = new Tweet(tweetMessage, user0);
+        Tweet tweet = new Tweet(tweetMessage, account0);
 
         //First tweet so ID is 0
         Assert.assertEquals(tweet.getId(), 0);
@@ -94,18 +94,18 @@ public class DomainTest {
         Assert.assertEquals(tweet.getMessage(), tweetMessage);
 
         //Validate auto add tweet to user tweet list
-        Assert.assertEquals(user0.getTweets().iterator().next(), tweet );
+        Assert.assertEquals(account0.getTweets().iterator().next(), tweet );
 
 
         //validate tweeted by
-        Assert.assertEquals(tweet.getTweetedBy(), user0);
+        Assert.assertEquals(tweet.getTweetedBy(), account0);
 
         //Validate add no double tweets
-        Assert.assertFalse(user0.addTweet(tweet));
+        Assert.assertFalse(account0.addTweet(tweet));
 
         //validate tweet delete
-        Assert.assertTrue(user0.deleteTweet(tweet));
-        Assert.assertTrue(user0.getTweets().isEmpty());
+        Assert.assertTrue(account0.deleteTweet(tweet));
+        Assert.assertTrue(account0.getTweets().isEmpty());
 
         Tweet emptyTweet = new Tweet();
 
@@ -114,7 +114,7 @@ public class DomainTest {
     @org.junit.Test
     public void testTweetDatabaseValues(){
         String tweetMessage = "Test Tweet message";
-        Tweet tweet = new Tweet(tweetMessage, user0);
+        Tweet tweet = new Tweet(tweetMessage, account0);
         //Validate database filled value
         Assert.assertNull(tweet.getPublished());
      }
@@ -122,14 +122,14 @@ public class DomainTest {
     @org.junit.Test
     public void testTweetMentions() {
         String tweetMessage = "Test Tweet message";
-        Tweet tweet = new Tweet(tweetMessage, user0);
+        Tweet tweet = new Tweet(tweetMessage, account0);
 
         // Test mentions
-        Assert.assertTrue(tweet.AddMention(user1));
+        Assert.assertTrue(tweet.AddMention(account1));
 
-        Assert.assertEquals(tweet.getMentions().iterator().next(), user1);
+        Assert.assertEquals(tweet.getMentions().iterator().next(), account1);
 
-        Assert.assertTrue(tweet.DeleteMention(user1));
+        Assert.assertTrue(tweet.DeleteMention(account1));
 
         Assert.assertTrue(tweet.getMentions().isEmpty());
 
@@ -138,7 +138,7 @@ public class DomainTest {
     @org.junit.Test
     public void testTweetTags() {
         String tweetMessage = "Test Tweet message";
-        Tweet tweet = new Tweet(tweetMessage, user0);
+        Tweet tweet = new Tweet(tweetMessage, account0);
 
         // Test tags
         String tag = "TestTag";
@@ -170,21 +170,21 @@ public class DomainTest {
     @org.junit.Test
     public void testTweetLikes() {
         String tweetMessage = "Test Tweet message";
-        Tweet tweet = new Tweet(tweetMessage, user0);
+        Tweet tweet = new Tweet(tweetMessage, account0);
 
         // Test likes
-        Assert.assertTrue(tweet.AddLike(user1));
+        Assert.assertTrue(tweet.AddLike(account1));
 
-        Assert.assertEquals(tweet.getLikes().iterator().next(), user1);
+        Assert.assertEquals(tweet.getLikes().iterator().next(), account1);
 
-        Assert.assertEquals(tweet.getLikes().iterator().next(), user1);
+        Assert.assertEquals(tweet.getLikes().iterator().next(), account1);
 
 
         // Accept no double likes
-        Assert.assertFalse(tweet.AddLike(user1));
+        Assert.assertFalse(tweet.AddLike(account1));
 
         // Test delete like
-        Assert.assertTrue(tweet.DeleteLike(user1));
+        Assert.assertTrue(tweet.DeleteLike(account1));
 
         Assert.assertTrue(tweet.getLikes().isEmpty());
     }

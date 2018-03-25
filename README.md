@@ -22,15 +22,15 @@ To create an new users
 POST
 - api/users/create
 
-To get a user by id
+To get a account by id
 GET
 - api/users/get/{id}
 
-To remove a user by id
+To remove a account by id
 DELETE
 - api/users/remove/{id}
 
-To update a user
+To update a account
 - api/users/{id}
 BODY: USER JSON object
 
@@ -42,11 +42,11 @@ To get all following
 GET
 - api/users/following/{id}
 
-To follow a user
+To follow a account
 POST
 - api/users/followers/{id}/add/{myId}
 
-To unfollow a user
+To unfollow a account
 POST
 - api/users/followers/{id}/remove/{myId}
 
@@ -55,11 +55,11 @@ To get all available roles
 GET
 - api/users/roles
 
-To approve a role to a user
+To approve a role to a account
 PUT
 - api/users/{userid}/role
 BODY: A JSON role object
 
-To remove a role of a user
+To remove a role of a account
 DELETE
 - api/users/{userid}/role/remove/{roleid}

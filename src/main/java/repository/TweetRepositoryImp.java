@@ -5,8 +5,8 @@
  */
 package repository;
 
+import model.Account;
 import model.Tweet;
-import model.User;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import java.util.List;
@@ -72,7 +72,7 @@ public class TweetRepositoryImp implements TweetRepository {
     }
 
     @Override
-    public List<Tweet> getAllTweets(int begin, int max, User user) {
+    public List<Tweet> getAllTweets(int begin, int max, Account account) {
         return null;
     }
 
@@ -99,16 +99,16 @@ public class TweetRepositoryImp implements TweetRepository {
     }
 
     @Override
-    public List<Tweet> getTweetsOfUser(DateTime afterTime, User user) {
+    public List<Tweet> getTweetsOfUser(DateTime afterTime, Account account) {
         return em.createQuery("select t from Tweet t where t.tweetedBy = :user ORDER BY t.published DESC",Tweet.class )
-                .setParameter("user",user)
+                .setParameter("user", account)
                 .getResultList();
     }
 
     @Override
-    public List<Tweet> getTweetsMentioned(User user) {
+    public List<Tweet> getTweetsMentioned(Account account) {
         return em.createQuery("select t From Tweet t where :user member t.mentions ORDER BY t.published DESC")
-                .setParameter("user", user )
+                .setParameter("user", account)
                 .getResultList();    }
 
     @Override
@@ -118,7 +118,7 @@ public class TweetRepositoryImp implements TweetRepository {
 
 
     @Override
-    public List<Tweet> getTweetsFollowing(User myAccount, int begin, int max) {
+    public List<Tweet> getTweetsFollowing(Account myAccount, int begin, int max) {
         return  em.createNamedQuery("Tweet.getTweetsOfFollowing").
                 setParameter("userid", myAccount.getId())
                 .setMaxResults(10)

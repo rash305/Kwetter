@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
  */
 public class TweetTest {
 
-    User user0;
-    User user1;
+    Account account0;
+    Account account1;
 
 
     Tweet tweet0;
@@ -22,12 +22,12 @@ public class TweetTest {
     @Before
     public void setUp() throws Exception {
 
-        Set<USER_ROLE> roles = new HashSet<USER_ROLE>();
-        roles.add(new USER_ROLE("standard"));
-        user0 = new User("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
+        Set<Group> roles = new HashSet<Group>();
+        roles.add(new Group("standard"));
+        account0 = new Account("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
         tweet0 = new Tweet();
 
-        user1 = new User();
+        account1 = new Account();
 
     }
 
@@ -63,22 +63,22 @@ public class TweetTest {
 
     @Test
     public void setTweetedBy() throws Exception {
-        tweet0.setTweetedBy(user0);
-        assertEquals(tweet0.getTweetedBy(), user0);
+        tweet0.setTweetedBy(account0);
+        assertEquals(tweet0.getTweetedBy(), account0);
     }
 
     @Test
     public void setLikes() throws Exception {
-        Set<User> likes = new HashSet<User>();
-        likes.add(user0);
+        Set<Account> likes = new HashSet<Account>();
+        likes.add(account0);
         tweet0.setLikes(likes);
         assertEquals(tweet0.getLikes(), likes);
     }
 
     @Test
     public void setMentions() throws Exception {
-        List<User> mentions = new ArrayList<User>();
-        mentions.add(user0);
+        List<Account> mentions = new ArrayList<Account>();
+        mentions.add(account0);
         tweet0.setMentions(mentions);
         assertEquals(tweet0.getMentions(), mentions);
     }

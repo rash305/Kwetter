@@ -1,17 +1,13 @@
 package repository;
 
+import model.Account;
 import model.Tweet;
-import model.User;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Default;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.reverseOrder;
 import static java.util.function.Function.identity;
@@ -91,7 +87,7 @@ public class TweetCollectionRepository implements TweetRepository {
     }
 
     @Override
-    public List<Tweet> getAllTweets(int begin, int max, User user) {
+    public List<Tweet> getAllTweets(int begin, int max, Account account) {
         return null;
     }
 
@@ -111,33 +107,33 @@ public class TweetCollectionRepository implements TweetRepository {
     }
 
 
-    public List<Tweet> getTweetsOfUser(DateTime afterTime,User user) {
+    public List<Tweet> getTweetsOfUser(DateTime afterTime, Account account) {
 
         List<Tweet> returnTweets = new ArrayList<Tweet>();
         for (Tweet t : tweets) {
-            if (t.getTweetedBy().getId() == user.getId()) {
+            if (t.getTweetedBy().getId() == account.getId()) {
                 returnTweets.add(t);
             }
         }
         return tweets;
     }
 
-    public List<Tweet> getTweetsMentioned(User user) {
+    public List<Tweet> getTweetsMentioned(Account account) {
 
         List<Tweet> returnTweets = new ArrayList<Tweet>();
         for (Tweet t : tweets) {
-            if (t.getMentions().contains(user)) {
+            if (t.getMentions().contains(account)) {
                 returnTweets.add(t);
             }
         }
         return tweets;
     }
 
-    public List<Tweet> getTweetsFollowing(User myAccount, int begin, int max) {
+    public List<Tweet> getTweetsFollowing(Account myAccount, int begin, int max) {
         List<Tweet> tweets = new ArrayList<Tweet>();
-        for (User followingUser : myAccount.getFollowing()) {
+        for (Account followingAccount : myAccount.getFollowing()) {
             for (Tweet t : tweets) {
-                if (t.getTweetedBy().getId() == followingUser.getId()) {
+                if (t.getTweetedBy().getId() == followingAccount.getId()) {
                     tweets.add(t);
                 }
             }

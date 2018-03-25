@@ -14,10 +14,10 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(name = "Tweet.getTweetsOfFollowing",
                 query = "SELECT t\n"
-                        + "FROM User u, Tweet t\n"
+                        + "FROM Account u, Tweet t\n"
                         + "INNER JOIN t.tweetedBy tb"
                         + "INNER JOIN u.following uf \n"
-                        + "INNER JOIN User u2 \n"
+                        + "INNER JOIN Account u2 \n"
                         + "WHERE t.id = uf.id\n"
                         + "AND u2.id = uf.id \n"
                         + "AND u.id = :userid"
@@ -43,7 +43,7 @@ public class Tweet implements Serializable      {
     public Tweet() {
     }
 
-    public Tweet(String message, User tweetedBy) {
+    public Tweet(String message, Account tweetedBy) {
         this.message = message;
         this.tweetedBy = tweetedBy;
         tweetedBy.addTweet(this);
@@ -62,11 +62,11 @@ public class Tweet implements Serializable      {
     private List<String> tags = new ArrayList<String>();
 
     @ManyToOne (cascade = CascadeType.ALL)
-    private User tweetedBy = null;
+    private Account tweetedBy = null;
     @OneToMany (cascade = CascadeType.ALL)
-    private Set<User> likes  = new HashSet<User>();
+    private Set<Account> likes  = new HashSet<Account>();
     @OneToMany(cascade = CascadeType.ALL)
-    private List<User> mentions = new ArrayList<User>();
+    private List<Account> mentions = new ArrayList<Account>();
 
 
     @Basic(optional = false)
@@ -89,7 +89,7 @@ public class Tweet implements Serializable      {
         return tags;
     }
 
-    public User getTweetedBy() {
+    public Account getTweetedBy() {
         return tweetedBy;
     }
 
@@ -97,7 +97,7 @@ public class Tweet implements Serializable      {
         return likes;
     }
 
-    public List<User> getMentions() {
+    public List<Account> getMentions() {
         return mentions;
     }
 
@@ -122,15 +122,15 @@ public class Tweet implements Serializable      {
         this.tags = tags;
     }
 
-    public void setTweetedBy(User tweetedBy) {
+    public void setTweetedBy(Account tweetedBy) {
         this.tweetedBy = tweetedBy;
     }
 
-    public void setLikes(Set<User> likes) {
+    public void setLikes(Set<Account> likes) {
         this.likes = likes;
     }
 
-    public void setMentions(List<User> mentions) {
+    public void setMentions(List<Account> mentions) {
         this.mentions = mentions;
     }
 
@@ -141,16 +141,16 @@ public class Tweet implements Serializable      {
     //endregion
 
     //region Methods
-    public boolean AddMention(User user) {
+    public boolean AddMention(Account account) {
         int mentionCount = mentions.size();
-        mentions.add(user);
+        mentions.add(account);
         return (mentionCount != mentions.size());
     }
 
 
-    public boolean DeleteMention(User user) {
+    public boolean DeleteMention(Account account) {
         int mentionsCount = mentions.size();
-        mentions.remove(user);
+        mentions.remove(account);
         return (mentionsCount != mentions.size());
     }
 
@@ -180,16 +180,16 @@ public class Tweet implements Serializable      {
     }
 
 
-    public boolean AddLike(User user) {
+    public boolean AddLike(Account account) {
         int likeCount = likes.size();
-        likes.add(user);
+        likes.add(account);
         return (likeCount != likes.size());
     }
 
 
-    public boolean DeleteLike(User user) {
+    public boolean DeleteLike(Account account) {
         int likesCount = likes.size();
-        likes.remove(user);
+        likes.remove(account);
         return (likesCount != likes.size());
     }
 

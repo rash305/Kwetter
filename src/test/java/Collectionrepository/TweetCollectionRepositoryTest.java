@@ -1,8 +1,8 @@
 package Collectionrepository;
 
+import model.Account;
 import model.Tweet;
-import model.USER_ROLE;
-import model.User;
+import model.Group;
 import org.junit.Before;
 import org.junit.Test;
 import repository.TweetCollectionRepository;
@@ -18,8 +18,8 @@ import static org.junit.Assert.*;
  */
 public class TweetCollectionRepositoryTest {
 
-    User user0;
-    User user1;
+    Account account0;
+    Account account1;
     TweetRepository tweetRepository;
 
     Tweet tweet0;
@@ -27,19 +27,19 @@ public class TweetCollectionRepositoryTest {
     @Before
     public void setUp() throws Exception {
 
-        Set<USER_ROLE> roles = new HashSet<USER_ROLE>();
-        roles.add(new USER_ROLE("standard"));
-        user0 = new User("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
+        Set<Group> roles = new HashSet<Group>();
+        roles.add(new Group("standard"));
+        account0 = new Account("username", "test@email.com", "encPass", "Eindhoven", "Dit ben ik", "/avatar/username.png", "website.nl",roles );
         tweet0 = new Tweet();
 
-        user1 = new User();
+        account1 = new Account();
         tweetRepository = new TweetCollectionRepository();
     }
 
     @Test
     public void createTweet() throws Exception {
         int tweetId = 99;
-        Tweet t = new Tweet("TestTweet", user0);
+        Tweet t = new Tweet("TestTweet", account0);
         t.setId(tweetId);
         Tweet repoTweet = tweetRepository.createTweet(t);
         assertNotEquals(repoTweet.getId(), tweetId);
@@ -49,7 +49,7 @@ public class TweetCollectionRepositoryTest {
     @Test
     public void getTweet() throws Exception {
         int tweetId = 99;
-        Tweet t = new Tweet("TestTweet", user0);
+        Tweet t = new Tweet("TestTweet", account0);
         t.setId(tweetId);
 
         Tweet repoTweet = tweetRepository.createTweet(t);
@@ -62,7 +62,7 @@ public class TweetCollectionRepositoryTest {
     public void updateTweet() throws Exception {
         int tweetId = 99;
         String message = "Test tweet message";
-        Tweet t = new Tweet(message, user0);
+        Tweet t = new Tweet(message, account0);
         t.setId(tweetId);
 
         Tweet repoTweet = tweetRepository.createTweet(t);
@@ -81,7 +81,7 @@ public class TweetCollectionRepositoryTest {
 
         int tweetId = 99;
         String message = "Test tweet message";
-        Tweet t = new Tweet(message, user0);
+        Tweet t = new Tweet(message, account0);
         t.setId(tweetId);
 
         Tweet repoTweet = tweetRepository.createTweet(t);
@@ -93,40 +93,40 @@ public class TweetCollectionRepositoryTest {
 
     @Test
     public void getTweetsOfUser() throws Exception {
-        User user = new User();
-        user.setId(0);
-        user.setUserName("EersteNaam");
+        Account account = new Account();
+        account.setId(0);
+        account.setUserName("EersteNaam");
 
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUserName("TweedeNaam");
+        Account account1 = new Account();
+        account1.setId(1);
+        account1.setUserName("TweedeNaam");
 
 
-        Tweet tweet1 = new Tweet("Eerste Tweet",user);
-        user.addTweet(tweet1);
+        Tweet tweet1 = new Tweet("Eerste Tweet", account);
+        account.addTweet(tweet1);
         tweetRepository.createTweet(tweet1);
-        Tweet tweet2 = new Tweet("Tweede Tweet",user1);
-        user1.addTweet(tweet2);
+        Tweet tweet2 = new Tweet("Tweede Tweet", account1);
+        account1.addTweet(tweet2);
         tweetRepository.createTweet(tweet2);
 
-        Tweet tweet3 = new Tweet("Derde Tweet",user);
-        user.addTweet(tweet3);
+        Tweet tweet3 = new Tweet("Derde Tweet", account);
+        account.addTweet(tweet3);
         tweetRepository.createTweet(tweet3);
 
-        Tweet tweet4 = new Tweet("Vierde Tweet",user1);
-        user1.addTweet(tweet4);
+        Tweet tweet4 = new Tweet("Vierde Tweet", account1);
+        account1.addTweet(tweet4);
         tweetRepository.createTweet(tweet4);
 
-        Tweet tweet5 = new Tweet("Vijfde Tweet",user);
-        user.addTweet(tweet5);
+        Tweet tweet5 = new Tweet("Vijfde Tweet", account);
+        account.addTweet(tweet5);
         tweetRepository.createTweet(tweet5);
 
-        Tweet tweet6 = new Tweet("Zesde Tweet",user1);
-        user1.addTweet(tweet6);
+        Tweet tweet6 = new Tweet("Zesde Tweet", account1);
+        account1.addTweet(tweet6);
         tweetRepository.createTweet(tweet6);
 
-//        List<Tweet> tweetList = tweetRepository.getTweetsOfUser(user1, 0, 200);
-       // assertTrue(user1.getTweets().containsAll(tweetList) );
+//        List<Tweet> tweetList = tweetRepository.getTweetsOfUser(account1, 0, 200);
+       // assertTrue(account1.getTweets().containsAll(tweetList) );
     }
 
     @Test

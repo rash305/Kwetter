@@ -1,14 +1,13 @@
 package repository;
 
 
-import model.USER_ROLE;
-import model.User;
+import model.Account;
+import model.Group;
 import org.eclipse.persistence.annotations.ReturnInsert;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,96 +19,96 @@ public class UserRepositoryImp implements UserRepository {
     EntityManager em;
 
     @Override
-    public User getUser(int id) {
+    public Account getUser(int id) {
 
-        User returnUser = em.find(User.class, id);
+        Account returnAccount = em.find(Account.class, id);
         // Do a refresh so Following/followers gets updated
-        if (returnUser != null) {
-            em.refresh(returnUser);
+        if (returnAccount != null) {
+            em.refresh(returnAccount);
 
         }
-        return returnUser;
+        return returnAccount;
 
 
     }
 
     @Override
-    public List<User> getUsers(int page) {
+    public List<Account> getUsers(int page) {
         if (page < 0) {
-            return em.createQuery("Select a from User a order by a.userName", User.class)
+            return em.createQuery("Select a from Account a order by a.userName", Account.class)
                     .getResultList();
         }
         int pagesize = 20;
-        return em.createQuery("Select a from User a order by a.userName", User.class)
+        return em.createQuery("Select a from Account a order by a.userName", Account.class)
                 .setFirstResult(pagesize * page).setMaxResults(page * pagesize + pagesize)
                 .getResultList();
     }
 
 
     @Override
-    public List<User> findUserByName(String username) {
+    public List<Account> findUserByName(String username) {
         return null;
     }
 
 
     @Override
     @ReturnInsert
-    public User createUser(User user) {
-        em.persist(user);
-        return user;
+    public Account createUser(Account account) {
+        em.persist(account);
+        return account;
     }
 
     @Override
-    public User updateUser(User user) {
-        User userExists = em.find(User.class, user.getId());
-        if (userExists == null) {
+    public Account updateUser(Account account) {
+        Account accountExists = em.find(Account.class, account.getId());
+        if (accountExists == null) {
             return null;
         }
-        em.merge(user);
+        em.merge(account);
         em.flush();
-        em.refresh(userExists);
+        em.refresh(accountExists);
 
-        return userExists;
+        return accountExists;
     }
 
     @Override
     public boolean removeUser(int id) {
-        User deleteUser = getUser(id);
-        if (deleteUser != null) {
-            em.remove(deleteUser);
+        Account deleteAccount = getUser(id);
+        if (deleteAccount != null) {
+            em.remove(deleteAccount);
             return true;
         }
         return false;
     }
 
     @Override
-    public USER_ROLE getRole(int id) {
+    public Group getRole(int id) {
 
-        return em.find(USER_ROLE.class, id);
+        return em.find(Group.class, id);
     }
 
     @Override
-    public List<USER_ROLE> getRoles() {
+    public List<Group> getRoles() {
 
-        return em.createQuery("Select a from USER_ROLE a order by a.id", USER_ROLE.class).getResultList();
+        return em.createQuery("Select a from Group a order by a.id", Group.class).getResultList();
     }
 
     @Override
-    public Collection<USER_ROLE> createRoles(Collection<USER_ROLE> roles) {
-        for (USER_ROLE role : roles) {
+    public Collection<Group> createRoles(Collection<Group> roles) {
+        for (Group role : roles) {
             em.persist(role);
         }
         return roles;
     }
 
     @Override
-    public USER_ROLE createRole(USER_ROLE role) {
+    public Group createRole(Group role) {
         em.persist(role);
         return role;
     }
 
     @Override
-    public boolean removeRole(USER_ROLE role) {
+    public boolean removeRole(Group role) {
         boolean returnValue = em.contains(role);
         em.remove(role);
         return returnValue;

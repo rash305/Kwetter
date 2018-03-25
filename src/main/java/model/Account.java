@@ -7,21 +7,20 @@ import java.io.Serializable;
 import java.util.*;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REFRESH;
 
 /**
  * Created by Sjoerd on 26-2-2018.
  */
 @Entity
 @Model
-public class User implements Serializable {
+public class Account implements Serializable {
 
     //region Constructor
 
     /**
      * Empty constructor of the user
      */
-    public User() {
+    public Account() {
     }
 
     /**
@@ -34,7 +33,7 @@ public class User implements Serializable {
      * @param website
      * @param roles
      */
-    public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website, Set<USER_ROLE> roles) {
+    public Account(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website, Set<Group> roles) {
         this.userName = userName;
         this.email = email;
         this.encryptedPassword = encryptedPassword;
@@ -56,7 +55,7 @@ public class User implements Serializable {
      * @param avatarPath
      * @param website
      */
-    public User(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website) {
+    public Account(String userName, String email, String encryptedPassword, String location, String bio, String avatarPath, String website) {
         this.userName = userName;
         this.email = email;
         this.encryptedPassword = encryptedPassword;
@@ -75,15 +74,17 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private String userName;
+    @Column(unique = true)
     private String email;
     private String encryptedPassword;
     private String location;
     private String bio;
     private String avatarPath;
     private String website;
-    @ManyToMany
-    private Set<USER_ROLE> roles;
+    @ManyToMany(mappedBy = "users")
+    private Set<Group> roles;
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweetedBy", cascade = ALL)
@@ -94,14 +95,14 @@ public class User implements Serializable {
 //            inverseJoinColumns = @JoinColumn(name = "following_id"))
 
     @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    private Set<User> following = new HashSet<User>();
+    private Set<Account> following = new HashSet<Account>();
     //@ManyToMany(fetch = FetchType.LAZY, mappedBy="following")
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             joinColumns = @JoinColumn(name = "following_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_by"))
-    private Set<User> followers = new HashSet<User>();
+    private Set<Account> followers = new HashSet<Account>();
 
 
     //endregion
@@ -141,9 +142,11 @@ public class User implements Serializable {
         return website;
     }
 
-    public Set<USER_ROLE> getRoles() {
+
+    public Set<Group> getRoleset() {
         return roles;
     }
+
 
     @JsonbTransient
     public Collection<Tweet> getTweets() {
@@ -151,12 +154,12 @@ public class User implements Serializable {
     }
 
     @JsonbTransient
-    public Collection<User> getFollowing() {
+    public Collection<Account> getFollowing() {
         return following;
     }
 
     @JsonbTransient
-    public Collection<User> getFollowers() {
+    public Collection<Account> getFollowers() {
         return followers;
     }
 
@@ -201,21 +204,22 @@ public class User implements Serializable {
         this.tweets = tweets;
     }
 
-    public void setFollowing(Collection<User> following) {
-        for (User user : following) {
-            this.following.add(user);
+    public void setFollowing(Collection<Account> following) {
+        for (Account account : following) {
+            this.following.add(account);
 
         }
     }
 
-    public void setRoles(Set<USER_ROLE> roles) {
+    public void setRoles(Set<Group> roles) {
         this.roles = roles;
+
     }
 
-    public void setFollowers(Collection<User> followers) {
+    public void setFollowers(Collection<Account> followers) {
 
-        for (User user : followers) {
-            this.followers.add(user);
+        for (Account account : followers) {
+            this.followers.add(account);
 
         }
     }
@@ -226,28 +230,28 @@ public class User implements Serializable {
     //region Methods
 
 /*
-    public boolean Follow(User user) {
+    public boolean Follow(Account user) {
         int followCount = following.size();
         following.add(user);
         return (followCount != following.size());
     }
 
-    public boolean unFollow(User user) {
+    public boolean unFollow(Account user) {
         int followCount = following.size();
         following.remove(user);
         return (followCount != following.size());
     }
 */
 
-    public boolean addFollower(User user) {
+    public boolean addFollower(Account account) {
         int followCount = followers.size();
-        followers.add(user);
+        followers.add(account);
         return (followCount != followers.size());
     }
 
-    public boolean loseFollower(User user) {
+    public boolean loseFollower(Account account) {
         int followCount = followers.size();
-        followers.remove(user);
+        followers.remove(account);
         return (followCount != followers.size());
     }
 
@@ -264,16 +268,19 @@ public class User implements Serializable {
         return (tweetCount != tweets.size());
     }
 
-    public boolean addRole(USER_ROLE role) {
+    public boolean addRole(Group role) {
         int roleCount = roles.size();
         roles.add(role);
+        role.addUser(this);
         return (roleCount != roles.size());
 
     }
 
-    public boolean deleteRole(USER_ROLE role) {
+    public boolean deleteRole(Group role) {
         int roleCount = roles.size();
         roles.remove(role);
+        role.removeUser(this);
+
         return (roleCount != roles.size());
     }
     //endregion
