@@ -61,7 +61,7 @@ public class Tweet implements Serializable      {
     @ElementCollection
     private List<String> tags = new ArrayList<String>();
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.DETACH)
     private Account tweetedBy = null;
     @OneToMany (cascade = CascadeType.ALL)
     private Set<Account> likes  = new HashSet<Account>();

@@ -44,6 +44,7 @@ public class TweetService {
         if(tweet == null){
             throw new NullPointerException();
         }
+        tweet.getTweetedBy().deleteTweet(tweet);
         tweetRepository.removeTweet(tweet);
     }
 

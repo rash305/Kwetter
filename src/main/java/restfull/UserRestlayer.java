@@ -184,7 +184,7 @@ public class UserRestlayer{
     @DELETE
     @Consumes(APPLICATION_JSON)
     @Path("{userid}/role/remove/{roleid}")
-    public boolean removeUserRole(@PathParam("userid") int userid, @PathParam("roleid") int roleid) {
+    public boolean removeUserRole(@PathParam("userid") int userid, @PathParam("roleid") String roleid) {
         return userService.revokeRole(userid, roleid);
     }
     //</editor-fold>

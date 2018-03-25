@@ -125,7 +125,7 @@ public class UserService {
         }return false;
     }
 
-    public boolean revokeRole(int userid, int roleid){
+    public boolean revokeRole(int userid, String roleid){
         Account updateAccount = userRepository.getUser(userid);
         Group role = userRepository.getRole(roleid);
         if(updateAccount == null){

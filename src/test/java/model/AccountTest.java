@@ -185,7 +185,7 @@ public class AccountTest {
         Set<Group> roles= new HashSet<Group>();
         roles.add(new Group("Admin"));
         account.setRoles(roles);
-        assertEquals(account.getRoleset(), roles);
+        assertEquals(account.getRoles(), roles);
     }
 
 

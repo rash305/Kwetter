@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.*;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 
 /**
  * Created by Sjoerd on 26-2-2018.
@@ -87,7 +89,7 @@ public class Account implements Serializable {
     private Set<Group> roles;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweetedBy", cascade = ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tweetedBy", cascade = REMOVE )
     private Collection<Tweet> tweets = new HashSet<Tweet>();
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(
@@ -143,7 +145,7 @@ public class Account implements Serializable {
     }
 
 
-    public Set<Group> getRoleset() {
+    public Set<Group> getRoles() {
         return roles;
     }
 

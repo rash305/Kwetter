@@ -54,5 +54,20 @@ public class Group implements Serializable {
     public void removeUser(Account account){
         users.remove(account);
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Group){
+            Group temp = (Group)o;
+            if (this.getName().equals(temp.getName()))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
 }
 

@@ -106,11 +106,11 @@ public class UserCollectionRepository implements UserRepository {
         return false;
     }
 
-    public Group getRole(int id) {
+    public Group getRole(String id) {
         for (Group ur: rolesList) {
-   //         if(ur.getId() == id){
+            if(ur.getName() == id){
                 return ur;
-    //        }
+            }
         }
         return null;
     }

@@ -82,7 +82,7 @@ public class UserRepositoryImp implements UserRepository {
     }
 
     @Override
-    public Group getRole(int id) {
+    public Group getRole(String id) {
 
         return em.find(Group.class, id);
     }
@@ -90,7 +90,7 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public List<Group> getRoles() {
 
-        return em.createQuery("Select a from Group a order by a.id", Group.class).getResultList();
+        return em.createQuery("Select a from Group a order by a.groupName", Group.class).getResultList();
     }
 
     @Override

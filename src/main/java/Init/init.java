@@ -30,6 +30,7 @@ public class init {
 
     private Group userrole1;
     private Group userrole2;
+    private Group userrole3;
 
     private List<String> tags = new ArrayList();
     private List<Account> mentions = new ArrayList();
@@ -66,9 +67,11 @@ public class init {
     private void createRoles() {
         userrole1 = new Group("Standard");
         userrole2 = new Group("Admin");
+        userrole3 = new Group("Moderator");
         Set<Group> roles = new HashSet<>();
         roles.add(userrole1);
         roles.add(userrole2);
+        roles.add(userrole3);
         userRepository.createRoles(roles);
     }
 
@@ -80,6 +83,7 @@ public class init {
         account1.setEncryptedPassword("9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08");
         account1.addRole(userrole1);
         account1.addRole(userrole2);
+        account1.addRole(userrole3);
         try {
             Account accountPersisted = userRepository.createUser(account1);
         } catch (EntityExistsException ex) {

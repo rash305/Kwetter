@@ -23,7 +23,7 @@ public interface UserRepository {
     boolean removeUser(int id);
 
     Collection<Group> createRoles(Collection<Group> roles);
-    Group getRole(int id);
+    Group getRole(String id);
     List<Group> getRoles();
 
     //Not used outside this application (In service layer etc.) Maybe in future.
