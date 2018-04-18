@@ -144,7 +144,7 @@ public class Account implements Serializable {
         return website;
     }
 
-
+    @JsonbTransient
     public Set<Group> getRoles() {
         return roles;
     }

@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.ws.http.HTTPException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -180,10 +181,14 @@ public class userController implements Serializable {
     }
 
 
-    public void Logout(){
+    public void Logout() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
 
-        // And if failed:
+        context.getCurrentInstance().getExternalContext().invalidateSession();
         context.getExternalContext().setResponseStatus(401);
-        context.responseComplete();    }
+
+        context.getExternalContext().redirect(context.getExternalContext().getRequestContextPath() + "/index.xhtml");
+
+    }
+
 }

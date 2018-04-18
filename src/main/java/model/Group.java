@@ -1,6 +1,7 @@
 package model;
 
 import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class Group implements Serializable {
                     referencedColumnName = "groupName"),
             inverseJoinColumns = @JoinColumn(name = "USERNAME",
                     referencedColumnName = "USERNAME"))
+    @JsonbTransient
     private List<Account> users = new ArrayList<>();
 
 
