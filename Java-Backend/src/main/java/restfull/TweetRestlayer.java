@@ -1,5 +1,7 @@
 package restfull;
 
+import DTO.TweetDTO;
+import com.sun.javafx.collections.NonIterableChange;
 import model.Tweet;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import service.TweetService;
@@ -9,8 +11,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -22,7 +29,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 
 @Stateless
-@Path("tweet/")
+@Path("tweets/")
 @Produces(APPLICATION_JSON)
 @Consumes({APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public class TweetRestlayer {
@@ -33,6 +40,12 @@ public class TweetRestlayer {
     @Inject
     private TweetService tweetService;
 
+
+
+    @Context
+    SecurityContext securityContext;
+
+
     //   @GET
     //  public List<Account> getUser(String name) {
 ///        return userService.findUserByName(name);
@@ -40,10 +53,12 @@ public class TweetRestlayer {
 
     //<editor-fold Desc="Region GRUD">
     @POST
-    @Path("create")
-    public Tweet createTweet(Tweet tweet) {
+    @JWTTokenNeeded
+    public TweetDTO createTweet(TweetDTO tweet) {
+
+        int loggedInUserId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         try {
-            return tweetService.createTweet(tweet);
+            return new TweetDTO(tweetService.createTweet(tweet, loggedInUserId));
         } catch (Exception PersistEx) {
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -51,7 +66,6 @@ public class TweetRestlayer {
     }
 
     @PUT
-    @Path("update")
     public Tweet updateTweet(Tweet tweet){
         if(tweet.getId() == 0){
             throw new WebApplicationException("No tweet id is given.",Response.Status.BAD_REQUEST);
@@ -63,17 +77,11 @@ public class TweetRestlayer {
         return tweet1;
     }
 
-    @GET
-    @Path("{user}")
-    public List<Tweet> getTimeline(@PathParam("user") int id) {
-        try {
-            return tweetService.getTweetsFollowing(id, 0, 99999);
-        } catch (Exception ex) {
-            throw new WebApplicationException("Account can not be found", Response.Status.NOT_FOUND);
-        }
-    }
+
 
     @GET
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @Path("get/{tweetid}")
     public Tweet getTweet(@PathParam("tweetid") int id) {
         try {
@@ -88,15 +96,7 @@ public class TweetRestlayer {
         }
     }
 
-    @GET
-    @Path("by/{user}")
-    public List<Tweet> getTweetsOfUser(@PathParam("user") int id, DateTime time) {
-        try {
-            return tweetService.getTweetsOfUser(time, id);
-        } catch (Exception ex) {
-            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
-        }
-    }
+
 
 
     @GET

@@ -53,6 +53,15 @@ public class UserCollectionRepository implements UserRepository {
     }
 
     @Override
+    public Account getUser(String username) {
+        for (Account u: accountList) {
+            if(u.getUserName().equals(username)){
+                return u;
+            }
+        }
+        return null;    }
+
+    @Override
     public List<Account> getUsers(int page) {
         //ignore page
         return accountList;

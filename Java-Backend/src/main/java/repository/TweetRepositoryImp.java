@@ -36,6 +36,8 @@ public class TweetRepositoryImp implements TweetRepository {
     @Override
     public Tweet createTweet(Tweet tweet) {
         em.persist(tweet);
+        em.flush();
+        em.refresh(tweet);
         return tweet;
 
     }
@@ -119,9 +121,9 @@ public class TweetRepositoryImp implements TweetRepository {
 
     @Override
     public List<Tweet> getTweetsFollowing(Account myAccount, int begin, int max) {
-        return  em.createNamedQuery("Tweet.getTweetsOfFollowing").
+        return  em.createNamedQuery("Tweet.getTweetsOfFollowing2").
                 setParameter("userid", myAccount.getId())
-                .setMaxResults(10)
+                .setMaxResults(max)
                 .getResultList();
     }
 }

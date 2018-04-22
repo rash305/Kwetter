@@ -1,5 +1,6 @@
 package service;
 
+import DTO.TweetDTO;
 import model.Account;
 import model.Tweet;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
@@ -30,8 +31,11 @@ public class TweetService {
 
     //Region Methods.
 
-    public Tweet createTweet(Tweet tweet){
+    public Tweet createTweet(TweetDTO tweetDto, int Accountid){
+        Account account = userRepository.getUser(Accountid);
 
+        Tweet tweet = new Tweet(tweetDto.getMessage(), account);
+        account.addTweet(tweet);
         return tweetRepository.createTweet(tweet);
     }
 

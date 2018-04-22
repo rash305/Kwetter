@@ -33,6 +33,18 @@ public class UserRepositoryImp implements UserRepository {
     }
 
     @Override
+    public Account getUser(String username) {
+        Account returnAccount = em.createQuery("Select a from Account a where a.userName = :username", Account.class)
+                .setParameter("username", username)
+                .getSingleResult();
+        // Do a refresh so Following/followers gets updated
+      //  if (returnAccount != null) {
+      //      em.refresh(returnAccount);
+      //  }
+        return returnAccount;
+    }
+
+    @Override
     public List<Account> getUsers(int page) {
         if (page < 0) {
             return em.createQuery("Select a from Account a order by a.userName", Account.class)

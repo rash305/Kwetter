@@ -1,8 +1,11 @@
 package restfull;
 
+import DTO.AccountProfile;
+import DTO.TweetDTO;
 import model.Group;
 import model.Account;
 
+import model.Tweet;
 import service.TweetService;
 import service.UserService;
 
@@ -61,11 +64,14 @@ public class UserRestlayer{
     @GET
     @Produces({APPLICATION_JSON})
     @Consumes(APPLICATION_JSON)
-    @Path("get/{id}")
-    public Account findUser(@PathParam("id") int id) {
-        Account returnAccount = null;
+    @Path("{id}")
+        public AccountProfile findUser(@PathParam("id") int id) {
+        Account account = null;
+        AccountProfile returnAccount = null;
         try {
-            returnAccount = userService.getUser(id);
+            account = userService.getUser(id);
+            returnAccount = new AccountProfile(account);
+
         }
         catch (PersistenceException PersistEx){
             //Don't show any database exceptions
@@ -75,20 +81,24 @@ public class UserRestlayer{
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("{page}")
-    public List<Account> getUsers(@PathParam("page") int page) {
-        List<Account> returnAccount = null;
+    @Produces({APPLICATION_JSON})
+    @Consumes(APPLICATION_JSON)
+    @Path("username/{username}")
+    public AccountProfile findUser(@PathParam("username") String username) {
+        Account account = null;
+        AccountProfile returnAccountProfile = null;
         try {
-            returnAccount = userService.getUsers(page);
-
+            account = userService.getUser(username);
+            returnAccountProfile = new AccountProfile(account);
         }
         catch (PersistenceException PersistEx){
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnAccount;
+        return returnAccountProfile ;
     }
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("")
@@ -124,20 +134,28 @@ public class UserRestlayer{
     @GET
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    @Path("following/{id}")
-    public List<Account> getFollowing(@PathParam("id") int id) {
+    @Path("{id}/following")
+    public List<AccountProfile> getFollowing(@PathParam("id") int id) {
         List<Account> following = new ArrayList<>();
+        List<AccountProfile> returnfollowing = new ArrayList<>();
         following.addAll(userService.getFollowing(id));
-        return following;
+        for (Account a :following) {
+            returnfollowing.add(new AccountProfile(a) );
+        }
+        return returnfollowing;
     }
 
     @GET
     @Produces(APPLICATION_JSON)
-    @Path("followers/{id}")
-    public List<Account> getFollowers(@PathParam("id") int id) {
-        List<Account> following = new ArrayList<>();
-        following.addAll(userService.getFollowers(id));
-        return following;
+    @Path("{id}/followers")
+    public List<AccountProfile> getFollowers(@PathParam("id") int id) {
+        List<AccountProfile> returnfollowers = new ArrayList<>();
+        List<Account> followers = new ArrayList<>();
+        followers.addAll(userService.getFollowers(id));
+        for (Account a : followers) {
+            returnfollowers.add(new AccountProfile(a) );
+        }
+        return returnfollowers;
     }
 
     @POST
@@ -155,6 +173,37 @@ public class UserRestlayer{
 
     //</editor-fold >
 
+
+    @GET
+    @Path("{user}/timeline")
+    @JWTTokenNeeded
+    public List<TweetDTO> getTimeline(@PathParam("user") int id) {
+        try {
+            List<Tweet> tweets = tweetService.getTweetsFollowing(id, 0, 99999);
+            List<TweetDTO> tweetDTOS = new ArrayList<>();
+        for(Tweet t : tweets){
+            tweetDTOS.add(new TweetDTO(t));
+        }
+            return tweetDTOS;
+        } catch (Exception ex) {
+            throw new WebApplicationException("Account can not be found", Response.Status.NOT_FOUND);
+        }
+    }
+    @GET
+    @Path("{user}/tweets")
+    @JWTTokenNeeded
+    public List<TweetDTO> getTweetsOfUser(@PathParam("user") int id) {
+        try {
+            List<Tweet> tweets = tweetService.getTweetsOfUser(null , id);
+            List<TweetDTO> tweetDTOS = new ArrayList<>();
+            for (Tweet t: tweets) {
+                tweetDTOS.add(new TweetDTO(t) );
+            }
+            return tweetDTOS;
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
+        }
+    }
 
     //<editor-fold Desc="Roles">
 

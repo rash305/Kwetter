@@ -21,6 +21,12 @@ import java.util.*;
                         + "WHERE t.id = uf.id\n"
                         + "AND u2.id = uf.id \n"
                         + "AND u.id = :userid"
+                        + " order by t.published desc "),
+        @NamedQuery(name = "Tweet.getTweetsOfFollowing2",
+                query = "SELECT t\n"
+                        + "FROM Tweet t\n"
+                        + "INNER JOIN t.tweetedBy.followers uf \n"
+                        + "WHERE uf.id = :userid"
                         + " order by t.published desc ")
        })
 @NamedNativeQueries(
@@ -69,9 +75,10 @@ public class Tweet implements Serializable      {
     private List<Account> mentions = new ArrayList<Account>();
 
 
+
     @Basic(optional = false)
-    @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date published = null;
+    @Column(name =  "PUBLISHED",insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp published ;
     //endregion
 
 

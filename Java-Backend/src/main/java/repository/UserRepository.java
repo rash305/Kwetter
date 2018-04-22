@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface UserRepository {
     Account getUser(int id);
+    Account getUser(String username);
 
     List<Account> getUsers(int page);
 

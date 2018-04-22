@@ -32,6 +32,16 @@ public class UserService {
         return returnAccount;
     }
 
+    public Account getUser(String username){
+        Account returnAccount = null;
+        returnAccount = userRepository.getUser(username);
+
+        if(returnAccount == null){
+            throw new NotFoundException( String.format("Account with id %d does not exists", username));
+        }
+        return returnAccount;
+    }
+
     public List<Account> getUsers(int page){
         List<Account> returnAccount = null;
         returnAccount = userRepository.getUsers(page);
