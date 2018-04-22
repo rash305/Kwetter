@@ -1,9 +1,11 @@
 package service;
 
+import DTO.PrivateAccountDetails;
 import model.Account;
 import model.Group;
 import repository.JPA;
 import repository.UserRepository;
+import util.DTOMapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -69,6 +71,15 @@ public class UserService {
         return userRepository.createUser(account);
     }
 
+    public PrivateAccountDetails createUser(PrivateAccountDetails account){
+        //Reset password to test
+        account.setPassword("9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08");
+        Account newAccount = DTOMapper.getAccount(account);
+        newAccount.addFollower(newAccount);
+        newAccount = userRepository.createUser(newAccount);
+        return DTOMapper.getAccountDetails(newAccount);
+    }
+
     public Account updateUser(Account account){
         return userRepository.updateUser(account);
     }
@@ -98,6 +109,10 @@ public class UserService {
         }
 
         boolean returnValue = targetAccount.addFollower(loggedInAccount);
+        if(returnValue){
+            loggedInAccount.getFollowing().add(targetAccount);
+            userRepository.updateUser(loggedInAccount);
+        }
         userRepository.updateUser(targetAccount);
 
         return returnValue;

@@ -1,6 +1,7 @@
 package restfull;
 
 import DTO.AccountProfile;
+import DTO.PrivateAccountDetails;
 import DTO.TweetDTO;
 import model.Group;
 import model.Account;
@@ -61,6 +62,27 @@ public class UserRestlayer{
         return userService.createUser(account);
     }
 
+    @POST
+    @Consumes(APPLICATION_JSON)
+    public PrivateAccountDetails createNewuser(PrivateAccountDetails account) {
+        if(account.getUsername() == null || account.getUsername().isEmpty()){
+            throw new WebApplicationException("Username is required", 400);
+        }
+        if(account.getEmail() == null || account.getEmail().isEmpty()){
+            throw new WebApplicationException("Email is required", 400);
+        }
+        if(account.getPassword() == null || account.getPassword().isEmpty()){
+            throw new WebApplicationException("Password is required", 400);
+        }
+
+        try{
+       account = userService.createUser(account);}
+       catch (Exception ex){
+            throw ex;
+       }
+        return account;
+    }
+
     @GET
     @Produces({APPLICATION_JSON})
     @Consumes(APPLICATION_JSON)
@@ -83,7 +105,7 @@ public class UserRestlayer{
     @GET
     @Produces({APPLICATION_JSON})
     @Consumes(APPLICATION_JSON)
-    @Path("username/{username}")
+        @Path("username/{username}")
     public AccountProfile findUser(@PathParam("username") String username) {
         Account account = null;
         AccountProfile returnAccountProfile = null;
@@ -159,8 +181,8 @@ public class UserRestlayer{
     }
 
     @POST
-    @Path("followers/{id}/add/{myId}")
-    public boolean addFollower(@PathParam("id") int id, @PathParam("myId") int loggedinId) {
+    @Path("{id}/followers")
+    public boolean addFollower(@PathParam("id") int id, int loggedinId) {
         return userService.addFollower(id, loggedinId);
     }
 
