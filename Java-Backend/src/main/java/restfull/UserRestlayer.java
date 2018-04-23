@@ -3,12 +3,14 @@ package restfull;
 import DTO.AccountProfile;
 import DTO.PrivateAccountDetails;
 import DTO.TweetDTO;
+import com.sun.org.apache.xalan.internal.xsltc.trax.DOM2TO;
 import model.Group;
 import model.Account;
 
 import model.Tweet;
 import service.TweetService;
 import service.UserService;
+import util.DTOMapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -16,8 +18,11 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.xml.stream.events.DTD;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +47,11 @@ public class UserRestlayer{
     @Inject
     private TweetService tweetService;
 
- //   @GET
+    @Context
+    SecurityContext securityContext;
+
+
+    //   @GET
   //  public List<Account> getUser(String name) {
 ///        return userService.findUserByName(name);
  //   }
@@ -139,6 +148,7 @@ public class UserRestlayer{
     @DELETE
     @Consumes(APPLICATION_JSON)
     @Path("remove/{id}")
+    @JWTTokenNeeded
     public boolean removeUser(@PathParam("id") int id) {
         return userService.removeUser(id);
     }
@@ -148,9 +158,9 @@ public class UserRestlayer{
     @PUT
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    @Path("update")
-    public Account updateUser(Account account) {
-        return userService.updateUser(account);
+    @JWTTokenNeeded
+    public void updateUser( AccountProfile account) {
+        userService.updateUser(account);
     }
 
     @GET
@@ -186,10 +196,12 @@ public class UserRestlayer{
         return userService.addFollower(id, loggedinId);
     }
 
-    @POST
-    @Path("followers/{id}/remove/{myId}")
-    public boolean removeFollower(@PathParam("id") int id, @PathParam("myId") int loggedinId) {
-        return userService.removeFollower(id, loggedinId);
+    @DELETE
+    @Path("{id}/followers")
+    public boolean remove(@PathParam("id") int id) {
+        int loggedInUserId = Integer.parseInt(securityContext.getUserPrincipal().getName());
+
+        return userService.removeFollower(id, loggedInUserId);
     }
 
 
@@ -204,7 +216,7 @@ public class UserRestlayer{
             List<Tweet> tweets = tweetService.getTweetsFollowing(id, 0, 99999);
             List<TweetDTO> tweetDTOS = new ArrayList<>();
         for(Tweet t : tweets){
-            tweetDTOS.add(new TweetDTO(t));
+            tweetDTOS.add(DTOMapper.getTweetDTO(t));
         }
             return tweetDTOS;
         } catch (Exception ex) {
@@ -219,7 +231,7 @@ public class UserRestlayer{
             List<Tweet> tweets = tweetService.getTweetsOfUser(null , id);
             List<TweetDTO> tweetDTOS = new ArrayList<>();
             for (Tweet t: tweets) {
-                tweetDTOS.add(new TweetDTO(t) );
+                tweetDTOS.add(DTOMapper.getTweetDTO(t));
             }
             return tweetDTOS;
         } catch (Exception ex) {

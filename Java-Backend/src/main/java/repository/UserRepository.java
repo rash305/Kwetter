@@ -15,7 +15,6 @@ public interface UserRepository {
 
     List<Account> getUsers(int page);
 
-    List<Account> findUserByName(String username);
 
     Account createUser(Account account);
 

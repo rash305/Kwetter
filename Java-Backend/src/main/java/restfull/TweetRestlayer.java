@@ -6,6 +6,7 @@ import model.Tweet;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import service.TweetService;
 import service.UserService;
+import util.DTOMapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -58,7 +59,7 @@ public class TweetRestlayer {
 
         int loggedInUserId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         try {
-            return new TweetDTO(tweetService.createTweet(tweet, loggedInUserId));
+            return DTOMapper.getTweetDTO(tweetService.createTweet(tweet, loggedInUserId));
         } catch (Exception PersistEx) {
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -108,31 +109,37 @@ public class TweetRestlayer {
     @POST
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    @Path("like/{userid}")
-    public Tweet likeTweet(Tweet tweet, @PathParam("userid") int userid) {
+    @Path("{tweetid}/like")
+    @JWTTokenNeeded
+    public TweetDTO likeTweet(@PathParam("tweetid") int tweetid) {
+        int loggedInUserId = Integer.parseInt(securityContext.getUserPrincipal().getName());
+
         Tweet returnTweet;
         try {
-            returnTweet = tweetService.addLike(tweet, userid);
+            returnTweet = tweetService.addLike(tweetid, loggedInUserId);
         } catch (PersistenceException PersistEx) {
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnTweet;
+        return DTOMapper.getTweetDTO(returnTweet);
     }
 
-    @POST
+    @DELETE
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    @Path("dislike/{userid}")
-    public Tweet deleteLikeTweet(Tweet tweet, @PathParam("userid") int userid) {
+    @Path("{tweetid}/like")
+    @JWTTokenNeeded
+    public TweetDTO deleteLikeTweet(@PathParam("tweetid") int tweetid) {
+        int loggedInUserId = Integer.parseInt(securityContext.getUserPrincipal().getName());
+
         Tweet returnTweet;
         try {
-            returnTweet = tweetService.dislike(tweet, userid);
+            returnTweet = tweetService.dislike(tweetid, loggedInUserId);
         } catch (Exception ex) {
             //Don't show any database exceptions
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return returnTweet;
+        return DTOMapper.getTweetDTO(returnTweet);
     }
 
 
@@ -154,10 +161,11 @@ public class TweetRestlayer {
         return tweetService.getTrends();
     }
 
-    @GET
-    @Path("tag/{tagName}")
-    public List<Tweet> getTagTweets(@PathParam("tagName") String tag, DateTime time) {
-        return tweetService.getTweetsWithTag(tag, time);
+    @POST
+    @JWTTokenNeeded
+    @Path("tag")
+    public List<TweetDTO> getTagTweets(String tag) {
+        return DTOMapper.getTweetDTOList(tweetService.getTweetsWithTag(tag));
     }
 
 

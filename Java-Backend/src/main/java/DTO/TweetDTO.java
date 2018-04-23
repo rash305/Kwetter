@@ -4,6 +4,7 @@ import model.Account;
 import model.Tweet;
 
 import java.util.Date;
+import java.util.List;
 
 public class TweetDTO {
 
@@ -13,9 +14,19 @@ public class TweetDTO {
 
     private Date tweetedDate;
 
-    private Account tweetedBy;
+    private AccountProfile tweetedBy;
 
     private int likedCount;
+
+    private List<AccountProfile> liked;
+
+    public List<AccountProfile> getLiked() {
+        return liked;
+    }
+
+    public void setLiked(List<AccountProfile> liked) {
+        this.liked = liked;
+    }
 
     public int getId() {
         return id;
@@ -41,11 +52,11 @@ public class TweetDTO {
         this.tweetedDate = tweetedDate;
     }
 
-    public Account getTweetedBy() {
+    public AccountProfile getTweetedBy() {
         return tweetedBy;
     }
 
-    public void setTweetedBy(Account tweetedBy) {
+    public void setTweetedBy(AccountProfile tweetedBy) {
         this.tweetedBy = tweetedBy;
     }
 
@@ -57,13 +68,7 @@ public class TweetDTO {
         this.likedCount = likedCount;
     }
 
-    public TweetDTO(Tweet tweet) {
-        this.id = tweet.getId();
-        this.message = tweet.getMessage();
-        this.likedCount = tweet.getLikes().size();
-        this.tweetedBy =tweet.getTweetedBy();
-        this.tweetedDate = tweet.getPublished();
-    }
+
 
     public TweetDTO(){}
 }

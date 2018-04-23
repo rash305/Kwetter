@@ -2,6 +2,8 @@ package service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import model.Account;
+import org.mindrot.jbcrypt.BCrypt;
 import repository.JPA;
 import repository.UserRepository;
 
@@ -17,24 +19,36 @@ public class AuthService {
     @JPA
     UserRepository userRepository;
 
-    public String login(String username, String password)throws UnsupportedEncodingException{
-        return genToken();
+    public String login(String username, String password) throws Exception {
+        Account loginUser = userRepository.getUser(username);
+        if(loginUser == null){
+            throw new Exception("Login error");
+        }
+        if(BCrypt.checkpw(password,loginUser.getEncryptedPassword() ))
+        {
+            return genToken(loginUser);
+        }
+        else
+        {
+            throw new Exception("Login error");
+        }
+
     }
 
-    private String genToken() throws UnsupportedEncodingException {
+    private String genToken(Account account) throws UnsupportedEncodingException {
         Calendar now = Calendar.getInstance();
         Calendar expired = Calendar.getInstance();
 
         expired.add(Calendar.HOUR, 1);
 
         return Jwts.builder()
-                .setSubject("1")
+                .setSubject(String.valueOf(account.getId()))
                 .setId("15a96c27-f703-4f1b-adbd-e4c1b007cb83")
                 .setIssuedAt( now.getTime())
                 .setExpiration( expired.getTime())
-                .claim("name", "John Doe")
-                .claim("admin", true)
-                .claim("userid", 1)
+                .claim("name", account.getUserName())
+                .claim("admin", false)
+                .claim("userid", account.getId())
                 .signWith(SignatureAlgorithm.HS512, "kwetter".getBytes("UTF-8"))
                 .compact();
     }

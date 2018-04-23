@@ -9,6 +9,7 @@ import repository.*;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,8 +34,16 @@ public class TweetService {
 
     public Tweet createTweet(TweetDTO tweetDto, int Accountid){
         Account account = userRepository.getUser(Accountid);
+        List<String> tags = new ArrayList<>();
+        String[] words= tweetDto.getMessage().split(" ");
+        for (String word: words) {
+            if (word.startsWith("#")) {
+                tags.add(word );
+            }
 
+        }
         Tweet tweet = new Tweet(tweetDto.getMessage(), account);
+        tweet.setTags(tags);
         account.addTweet(tweet);
         return tweetRepository.createTweet(tweet);
     }
@@ -68,9 +77,9 @@ public class TweetService {
         return tweetRepository.getTweetsOfUser(afterTime, account);
     }
 
-    public Tweet addLike(Tweet tweet, int userid) {
+    public Tweet addLike(int tweetid, int userid) {
         Account loggedin = userRepository.getUser(userid);
-        tweet = tweetRepository.getTweet(tweet.getId());
+        Tweet tweet = tweetRepository.getTweet(tweetid);
         if(loggedin == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
@@ -82,9 +91,9 @@ public class TweetService {
         return tweetRepository.updateTweet(tweet);
     }
 
-    public Tweet dislike(Tweet tweet, int userid) {
+    public Tweet dislike(int tweetid, int userid) {
         Account loggedin = userRepository.getUser(userid);
-        tweet = tweetRepository.getTweet(tweet.getId());
+        Tweet tweet = tweetRepository.getTweet(tweetid);
         if(loggedin == null ){
             throw new NotFoundException( String.format("Loggedin user can not be found"));
         }
@@ -119,8 +128,8 @@ public class TweetService {
         return tweetRepository.getTrends();
     }
 
-    public List<Tweet> getTweetsWithTag(String tag, DateTime time) {
-        return tweetRepository.getAllTweetsWithTag(time, tag);
+    public List<Tweet> getTweetsWithTag(String tag) {
+        return tweetRepository.getAllTweetsWithTag(null, tag);
     }
 
     public List<Tweet> getMentionedTweet(int userid) {

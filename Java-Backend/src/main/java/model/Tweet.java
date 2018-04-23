@@ -69,9 +69,16 @@ public class Tweet implements Serializable      {
 
     @ManyToOne (cascade = CascadeType.DETACH)
     private Account tweetedBy = null;
-    @OneToMany (cascade = CascadeType.ALL)
-    private Set<Account> likes  = new HashSet<Account>();
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany (cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "likes",
+            joinColumns = @JoinColumn(name = "tweet"),
+            inverseJoinColumns = @JoinColumn(name = "person"))    private Set<Account> likes  = new HashSet<Account>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "mentions",
+            joinColumns = @JoinColumn(name = "tweet"),
+            inverseJoinColumns = @JoinColumn(name = "person"))
     private List<Account> mentions = new ArrayList<Account>();
 
 
@@ -100,7 +107,7 @@ public class Tweet implements Serializable      {
         return tweetedBy;
     }
 
-    public Set getLikes() {
+    public Set<Account> getLikes() {
         return likes;
     }
 

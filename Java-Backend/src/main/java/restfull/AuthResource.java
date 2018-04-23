@@ -7,6 +7,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,9 +34,9 @@ public class AuthResource {
     public Response  getToken(LoginCredentials login) {
         String token = null;
         try {
-            token = authService.login(login.getUsername(), login.getPassword());
-        } catch (UnsupportedEncodingException e) {
-            throw new WebApplicationException(Response.Status.FORBIDDEN);
+            token = authService.login(URLDecoder.decode(login.getUsername(), "UTF-8"), URLDecoder.decode(login.getPassword(), "UTF-8"));
+        } catch (Exception ex) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
 
         }
         return Response.ok()

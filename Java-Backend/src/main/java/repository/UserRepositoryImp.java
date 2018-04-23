@@ -57,11 +57,6 @@ public class UserRepositoryImp implements UserRepository {
     }
 
 
-    @Override
-    public List<Account> findUserByName(String username) {
-        return null;
-    }
-
 
     @Override
     @ReturnInsert

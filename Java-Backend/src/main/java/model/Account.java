@@ -75,7 +75,7 @@ public class Account implements Serializable {
     //region Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(unique = true)
     private String userName;
     @Column(unique = true)
@@ -247,6 +247,7 @@ public class Account implements Serializable {
 
     public boolean addFollower(Account account) {
         int followCount = followers.size();
+        account.getFollowing().add(this);
         followers.add(account);
         return (followCount != followers.size());
     }
@@ -286,4 +287,6 @@ public class Account implements Serializable {
         return (roleCount != roles.size());
     }
     //endregion
+
+
 }

@@ -1,5 +1,6 @@
 package service;
 
+import DTO.AccountProfile;
 import DTO.PrivateAccountDetails;
 import model.Account;
 import model.Group;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Created by Sjoerd on 26-2-2018.
@@ -63,17 +65,16 @@ public class UserService {
         return returnAccount;
     }
 
-    public List<Account> getUserByName(String name){
-        return userRepository.findUserByName(name);
-    }
 
     public Account createUser(Account account){
         return userRepository.createUser(account);
     }
 
     public PrivateAccountDetails createUser(PrivateAccountDetails account){
-        //Reset password to test
-        account.setPassword("9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08");
+
+
+        //Hash the password
+        account.setPassword(BCrypt.hashpw(account.getPassword(), BCrypt.gensalt()));
         Account newAccount = DTOMapper.getAccount(account);
         newAccount.addFollower(newAccount);
         newAccount = userRepository.createUser(newAccount);
@@ -81,7 +82,17 @@ public class UserService {
     }
 
     public Account updateUser(Account account){
+
         return userRepository.updateUser(account);
+    }
+
+    public void updateUser(AccountProfile accountProfile){
+        Account account = userRepository.getUser(accountProfile.getId());
+        account.setWebsite(accountProfile.getWebsite());
+        account.setLocation(accountProfile.getLocation());
+        account.setBio(accountProfile.getBio());
+        account.setAvatarPath(accountProfile.getAvatarPath());
+        userRepository.updateUser(account);
     }
 
     public boolean removeUser(int id){
@@ -129,6 +140,10 @@ public class UserService {
         }
 
         boolean returnValue = targetAccount.loseFollower(loggedInAccount);
+        if(returnValue){
+            loggedInAccount.getFollowing().remove(targetAccount);
+            userRepository.updateUser(loggedInAccount);
+        }
         userRepository.updateUser(targetAccount);
 
         return returnValue;
