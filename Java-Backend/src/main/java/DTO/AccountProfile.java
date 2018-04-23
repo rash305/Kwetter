@@ -66,4 +66,8 @@ public class AccountProfile {
         this.avatarPath = account.getAvatarPath();
         this.website = account.getWebsite();
     }
+
+    public AccountProfile(){
+
+    }
 }
