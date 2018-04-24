@@ -1,0 +1,15 @@
+<li class="list-group-item">
+  <div class="row">
+    <div class="col-2 p-0">
+      <img class="rounded-circle col-12 border-info "  src="{{user.avatarPath}}"
+           onerror="null;this.src='../../assets/profilePicture2.png'" alt="Foto">
+    </div>
+    <div class="col-10">
+      <a  href="/account/{{user.username}}" style="cursor: pointer; color: Black; text-decoration: none;">
+
+      <label class="h5 col-lg-7 col-md-12">{{user.username}}</label>
+      </a>
+      <label class="col-lg-4">{{user.location}}</label>
+    </div>
+  </div>
+</li>

@@ -1,0 +1,54 @@
+<div class="row">
+<div class="col-12 p-1">
+  <div class="border">
+
+    <div class="row">
+      <div class="col-md-1 p-2 ">
+        <img class="rounded-circle col-12 border-info "  src="{{tweet$.tweetedBy.avatarPath}}"
+             onerror="null;this.src='../../assets/profilePicture2.png'" alt="Foto">
+      </div>
+      <div class="col-md-7">
+        <a  href="/account/{{tweet$.tweetedBy.username}}" style="cursor: pointer; color: Black; text-decoration: none;">
+
+        <label class="h4 col-lg-4 col-md-12" style="cursor: pointer;">{{tweet$.tweetedBy.username}}</label>
+        </a>
+
+      </div>
+      <div class="col-md-3 ">
+      <div class="tooltip2">{{tweet$.getTweetedAgo()}}
+        <span class="tooltiptext">{{tweet$.tweetedDate}}</span>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-1 text-center" >
+        <div *ngIf="likedByLoggedInUser(); else elseBlock">
+          <label style="  background-image: url('../../../assets/like.png'); background-position: center; background-size: contain; background-repeat: no-repeat "
+                                                 (click)="like()"  class="tooltip2 p-4  text-white font-weight-bold ">{{tweet$.likedCount}}
+          <span class="tooltiptext">{{tweet$.getLikedString()}}</span>
+
+        </label>
+        </div>
+        <ng-template #elseBlock>
+          <label style="  background-image: url('../../../assets/unlike.png'); background-position: center; background-size: contain; background-repeat: no-repeat "
+                 (click)="like()"  class="tooltip2 p-4  text-dark font-weight-bold ">{{tweet$.likedCount}}
+            <span class="tooltiptext">{{tweet$.getLikedString()}}</span>
+
+          </label>
+        </ng-template>
+
+      </div>
+    <div class="col-11">
+      <label class="col-12">{{tweet$.message}}
+      </label>
+   </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+

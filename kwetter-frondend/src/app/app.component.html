@@ -1,0 +1,32 @@
+
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Kwetter</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/account">My Account</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/tweets">Tweets</a>
+      </li>
+
+
+    </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li col-4><button class="btn navbar-btn float-right" (click)="logout()">Logout</button></li>
+
+  </ul>
+ </div>
+</nav>
+
+  <br>
+
+<br>
+<br>
+<div class="container">
+
+<router-outlet></router-outlet>
+</div>

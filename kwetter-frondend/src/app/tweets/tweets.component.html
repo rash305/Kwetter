@@ -1,0 +1,15 @@
+<div class="row">
+<div class="col-12">
+  <input #newTweet class="col-md-9 form-control-sm"  required
+         [(ngModel)]="searchTag" >
+  <button class="col-md-2 btn btn-primary form-control" (click)="searchTweets()">Search tags</button>
+
+</div>
+</div>
+<hr>
+
+<div class="col-12">
+
+  <app-tweet *ngFor="let tweet of tweets$" [tweet$]=tweet></app-tweet>
+
+</div>
