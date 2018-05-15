@@ -3,6 +3,8 @@ import {TweetDataService} from '../services/tweet-data.service';
 import {Tweet} from '../models/tweet';
 import {TOKEN_NAME} from '../services/auth.constant';
 import {JwtHelper} from 'angular2-jwt';
+import {WebSocketService} from '../services/websocket.service';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
   selector: 'app-tweets',
@@ -11,10 +13,11 @@ import {JwtHelper} from 'angular2-jwt';
 })
 export class TweetsComponent implements OnInit {
   tweets$ = [];
-  searchTag= '';
+  searchTag = '';
   jwtHelper = new JwtHelper();
+  private ioConnection;
 
-  constructor(private tweetDataService: TweetDataService) {
+  constructor( private tweetDataService: TweetDataService) {
   }
 
   ngOnInit() {
@@ -23,6 +26,7 @@ export class TweetsComponent implements OnInit {
     this.tweetDataService.getTweets(decodedToken.userid).subscribe((tweets) => {
       this.tweets$ = tweets;
     });
+
   }
 
   searchTweets(): void {
@@ -30,5 +34,9 @@ export class TweetsComponent implements OnInit {
       this.tweets$ = returnTweet;
     });
   }
+
+
+
+
 
 }

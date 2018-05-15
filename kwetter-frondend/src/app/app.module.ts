@@ -28,6 +28,7 @@ import {ProfileDataService} from './services/profile-data.service';
 import { SmallAccountProfileComponent } from './account-profile/small-account-profile/small-account-profile.component';
 import { RegisterAccountComponent } from './register-account/register-account.component';
 import { UpdateAccountComponent } from './update-account/update-account.component';
+import {WebSocketService} from './services/websocket.service';
 
 
 export function authHttpServiceFactory(http: Http) {
@@ -56,6 +57,7 @@ export function authHttpServiceFactory(http: Http) {
     },*/
     AuthenticationService,
     TweetDataService,
+    WebSocketService,
     ProfileDataService,
     UserService,
     AuthGuard

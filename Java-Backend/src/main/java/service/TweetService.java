@@ -5,10 +5,12 @@ import model.Account;
 import model.Tweet;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import repository.*;
+import websockets.TimelineWebsocket;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +25,9 @@ public class TweetService {
     TweetRepository tweetRepository;
     @Inject @JPA
     UserRepository userRepository;
+
+    @Inject
+    TimelineWebsocket tweetWebSocket;
 
 
     public void UseCollectionRepository(){
@@ -45,7 +50,14 @@ public class TweetService {
         Tweet tweet = new Tweet(tweetDto.getMessage(), account);
         tweet.setTags(tags);
         account.addTweet(tweet);
-        return tweetRepository.createTweet(tweet);
+        Tweet newTweet = tweetRepository.createTweet(tweet);
+        try {
+            tweetWebSocket.UpdateTweetTimeline(newTweet);
+        }catch (IOException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println(ex.fillInStackTrace());
+        }
+            return newTweet;
     }
 
     public Tweet updateTweet(Tweet tweet){

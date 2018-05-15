@@ -6,6 +6,8 @@ import {ProfileUser} from '../models/ProfileUser';
 import {TOKEN_NAME} from '../services/auth.constant';
 import {JwtHelper} from 'angular2-jwt';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {WebSocketService} from '../services/websocket.service';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
   selector: 'app-account-profile',
@@ -22,7 +24,7 @@ export class AccountProfileComponent implements OnInit {
   followingList: ProfileUser[] = [];
   followersList: ProfileUser[] = [];
 
-  constructor(private profileDataService: ProfileDataService, private tweetDataService: TweetDataService, private route: ActivatedRoute, private router: Router) {
+  constructor(private tweetSocketService: WebSocketService, private profileDataService: ProfileDataService, private tweetDataService: TweetDataService, private route: ActivatedRoute, private router: Router) {
     this.route.params.subscribe( params => this.setOtherUserId(params) );
 
   }
@@ -49,6 +51,8 @@ export class AccountProfileComponent implements OnInit {
         this.GetFollowingAndFollowers(user.id);
       });
     }
+
+    this.UpdateTweetsSocket();
   }
   GetFollowingAndFollowers(userid: number) {
     this.profileDataService.getFollowing(userid).subscribe((userlist) => {
@@ -77,6 +81,21 @@ export class AccountProfileComponent implements OnInit {
     Unfollow() {
     this.profileDataService.unfollowUser(this.userPage$.id, this.loggedinUserId).subscribe((Message) => {
       alert(Message);
+    });
+  }
+
+
+  private UpdateTweetsSocket(): void {
+    const websocket: Subject<MessageEvent> = this.tweetSocketService.connect('localhost:8080/kwetter-1.0-SNAPSHOT/websocket');
+
+
+    websocket.subscribe((response: MessageEvent) => {
+      const tweet: Tweet = new Tweet(JSON.parse(response.data));
+
+      if (tweet.tweetedBy.id !== this.userPage$.id) {
+        return;
+      }
+      this.tweets$.unshift(tweet);
     });
   }
 }
