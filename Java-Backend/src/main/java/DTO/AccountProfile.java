@@ -2,6 +2,11 @@ package DTO;
 
 import model.Account;
 
+import javax.ws.rs.core.Link;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountProfile {
     private int id;
     private String username;
@@ -69,5 +74,20 @@ public class AccountProfile {
 
     public AccountProfile(){
 
+    }
+
+    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    private List<Link> links = new ArrayList<>();
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public void addLink(Link link) {
+        links.add(link);
     }
 }
