@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+    <title>Moderator Panel</title>
+</h:head>
+<h:body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="javascript:void(0)"><h2>Kwetter Admin Panel</h2></a>
+
+        </div>
+    </nav>
+
+
+    <div class="container">
+    <div class="jumbotron ">
+        <h1>Administrator panel</h1>
+        Click with the right mouse on a row to view all options.
+
+        <h:form id="LogoutForm">
+        <h:commandButton value="Log out" action="#{userControl.Logout}" class="float-right" />
+        </h:form>
+
+    </div>
+
+
+    <h:form id="userForm">
+
+        <h2>User accounts</h2>
+        <br/>
+        <div>
+        <p:dataTable id="usersTable" var="user" value="#{userControl.allUsers}"
+                     selectionMode="single"
+                     selection="#{userControl.selectedUser}"
+                     rowKey="#{user.userName}"
+                     rows="5"
+                     paginator="true"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="50">
+            <p:column headerText="Id" width="1">
+                <h:outputText value="#{user.id}"/>
+            </p:column>
+            <p:column headerText="Username" width="100">
+                <h:outputText value="#{user.userName}"/>
+            </p:column>
+            <p:column headerText="Email" width="100">
+                <h:outputText value="#{user.email}"/>
+            </p:column>
+            <p:column headerText="Role" width="50">
+                <p:dataList id="roles" value="#{user.roles}" var="role">
+                    <h:outputText value="#{role.name}"/>
+                </p:dataList>
+            </p:column>
+
+        </p:dataTable>
+
+        <p:contextMenu for="usersTable">
+
+            <p:menuitem value="See tweets" update="tweetList" />
+            <p:menuitem value="Toggle Moderator Role" update="usersTable" actionListener="#{userControl.ToggleModerator}"/>
+            <p:menuitem value="Toggle Admin Role" update="usersTable" actionListener="#{userControl.ToggleAdministrator}"/>
+            <p:menuitem value="Toggle standard Role" update="usersTable" actionListener="#{userControl.ToggleStandardRole}"/>
+        </p:contextMenu>
+
+
+
+        </div>
+
+        <hr></hr>
+        <p:growl id="growl" for="tweetMessage" showDetail="true"  />
+
+
+        <p:dataTable id="tweetList" value="#{userControl.selectedUser.tweets}" var="tweetItem"
+                            selectionMode="single"
+                             rowKey="#{tweetItem.message}"
+
+                             selection="#{userControl.selectedTweet}"
+                             rows="5"
+                            paginator="true"
+                            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} "
+                            rowsPerPageTemplate="50">
+
+                    <p:column headerText="Time" width="10">
+                            <h:outputText value="#{tweetItem.published}"/>
+                    </p:column>
+
+                <p:column headerText="Tweet" width="50">
+                    <h:outputText value="  #{tweetItem.message}"/>
+                </p:column>
+
+
+
+                    <p:column headerText="Tags" width="10">
+                        <p:dataList  value="#{tweetItem.tags}" var="tag">
+                            <h:outputText value="#{tag}"/>
+                        </p:dataList>
+                    </p:column>
+
+                </p:dataTable>
+
+        <p:contextMenu for="tweetList">
+
+            <p:menuitem value="Delete" update="userForm"      actionListener="#{userControl.RemoveTweet()}"/>
+        </p:contextMenu>
+    </h:form>
+    </div>
+
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+</h:body>
+</html>

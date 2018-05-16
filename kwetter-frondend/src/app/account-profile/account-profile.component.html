@@ -1,0 +1,52 @@
+<div class="row jumbotron p-4">
+<div class="col-md-3">
+  <img class="rounded-circle col-8  offset-1 border-info "  src="{{userPage$.avatarPath}}"
+       onerror="null;this.src='../../assets/profilePicture2.png'" alt="Foto">
+</div>
+<div class="col-md-7 ">
+  <div class="col-12">
+    <h3> {{userPage$.username}}</h3>
+  <p class="lead"  >{{userPage$.bio}}</p>
+  </div>
+  <label class="col-4 ">Location:</label><label class="col-8"> {{userPage$.location}}</label><br>
+  <label class="col-4 ">Website:</label><label class="col-8"> {{userPage$.website}}</label><br>
+
+</div>
+  <div class="col-md-2">
+
+    <div *ngIf="userPage$.id === loggedinUserId; else elseBlock">
+      <a  href="/account/edit" class="btn btn-outline-primary  btn-block">Edit</a>
+
+    </div>
+  <ng-template #elseBlock>
+    <button (click)="Follow()"  class="btn btn-outline-primary btn-block">follow</button>
+    <button (click)="Unfollow()"  class="btn btn-primary btn-block">following</button>
+
+  </ng-template>
+
+  </div>
+</div>
+
+<div class="row">
+<div  class="col-md-7 ">
+  <ul class="list-group">
+    <li class="list-group-item active">Tweets</li>
+    <app-tweet *ngFor="let tweet of tweets$" [tweet$]=tweet></app-tweet>
+
+  </ul>
+</div>
+  <div  class="col-md-5 offset-md-0 ">
+    <ul class="list-group">
+      <li class="list-group-item active">Following</li>
+      <app-small-account-profile *ngFor="let user of followingList" [user]=user></app-small-account-profile>
+
+    </ul>
+    <br>
+  <ul class="list-group">
+    <li class="list-group-item active">Followers</li>
+    <app-small-account-profile *ngFor="let user of followersList" [user]=user></app-small-account-profile>
+
+  </ul>
+
+  </div>
+</div>

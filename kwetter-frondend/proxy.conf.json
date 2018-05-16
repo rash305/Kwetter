@@ -1,0 +1,19 @@
+{
+  "/api/*": {
+    "target": "http://localhost:8080/kwetter-1.0-SNAPSHOT/api",
+    "secure":false,
+    "logLevel": "debug",
+    "changeOrigin":true,
+    "secure":false,
+    "pathRewrite": {"^/api" : ""}
+
+  },
+  "/websocket*": {
+    "target": "ws://localhost:8080/kwetter-1.0-SNAPSHOT",
+    "secure":false,
+    "logLevel": "debug",
+    "changeOrigin":true,
+    "secure":false
+
+  }
+}

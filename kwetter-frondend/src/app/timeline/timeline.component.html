@@ -1,0 +1,26 @@
+<div class="jumbotron">
+  <h1 class="display-3">Kwetter!</h1>
+  <p class="lead">Share the best thoughts with the world.</p>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col-12">
+
+      <textarea #newTweet class="col-12 form-control"  required multiple
+             [(ngModel)]="createTweet$.message" placeholder="What do you want to share?" >
+      </textarea>
+    </div>
+  </div>
+  <p class="lead float-right">
+    <button id="createTweet" class="float-right btn btn-primary btn-lg" (click)="createtweet()">Send tweet</button>
+
+  </p>
+</div>
+
+
+<hr>
+
+<div class="col-12">
+
+  <app-tweet *ngFor="let tweet of tweets$" [tweet$]=tweet></app-tweet>
+
+</div>

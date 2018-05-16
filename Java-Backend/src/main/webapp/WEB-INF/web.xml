@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>security_realm</realm-name>
+    </login-config>
+    <welcome-file-list>
+        <welcome-file>/index.xhtml</welcome-file>
+    </welcome-file-list>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Admin Pages</web-resource-name>
+            <description/>
+            <url-pattern>/admin_control.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin_role</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Moderator Pages</web-resource-name>
+            <description/>
+            <url-pattern>/mod_control.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>moderator_role</role-name>
+        </auth-constraint>
+    </security-constraint>
+</web-app>
